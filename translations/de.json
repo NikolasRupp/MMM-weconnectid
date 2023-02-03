@@ -1,0 +1,14 @@
+{
+	"ODOMETER": "Kilometerstand",
+	"SOC": "Ladestand",
+	"RANGE": "Reichweite",
+	"CLIMATE": "Klimaanlage",
+	"LOADING TIME": "Ladezeit",
+	"LOADING CURRENT": "Ladestrom",
+	"TARGET SOC": "Ziel Ladestand",
+	"OFF": "Aus",
+	"KMPH": "Lädt km/h",
+	"POSITION": "Position",
+	"UNKNOWN": "Unbekannt",
+	"DRIVING": "Fährt"
+}

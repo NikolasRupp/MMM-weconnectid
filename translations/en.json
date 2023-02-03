@@ -1,0 +1,14 @@
+{
+	"ODOMETER": "Odometer",
+	"SOC": "SOC",
+	"RANGE": "Range",
+	"CLIMATE": "Climate",
+	"LOADING TIME": "Loading Time",
+	"LOADING CURRENT": "Current",
+	"TARGET SOC": "Target SOC",
+	"OFF": "Off",
+	"KMPH": "Loading km/h",
+	"POSITION": "Position",
+	"UNKNOWN": "Unknown",
+	"DRIVING": "Driving"
+}
