@@ -130,7 +130,7 @@ Unlocked Car
 Open Door and Trunk
 ![Doors](git/normal_doors.png)
 
-Open Door and Front Right Window
+Open Door and Windows
 ![Window](git/normal_window.png)
 
 Charging View
