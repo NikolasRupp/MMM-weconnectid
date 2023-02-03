@@ -73,20 +73,20 @@ Module.register("MMM-weconnectid", {
 		td.style.position = "relative"
     	tr.appendChild(td);
 
-    	var img = document.createElement("img");
-		img.src = 'modules/MMM-weconnectid/Pictures/car.png';
-		img.style.maxWidth = "50%";
-		img.style.maxHeight = this.config.maxHeight;
-		img.id = "picture0";
-		td.appendChild(img);
-		var img = document.createElement("img");
-		img.src = 'modules/MMM-weconnectid/Pictures/status.png';
-		img.style.maxWidth = "50%";
-		img.style.maxHeight = this.config.maxHeight;
-		img.id = "picture0";
-		td.appendChild(img);
-
 		if (Vehicle.status == 1 || (Vehicle.status == 0 && Vehicle.odometer != 0)) {
+    		var img = document.createElement("img");
+			img.src = 'modules/MMM-weconnectid/Pictures/car.png';
+			img.style.maxWidth = "50%";
+			img.style.maxHeight = this.config.maxHeight;
+			img.id = "picture0";
+			td.appendChild(img);
+			var img = document.createElement("img");
+			img.src = 'modules/MMM-weconnectid/Pictures/status.png';
+			img.style.maxWidth = "50%";
+			img.style.maxHeight = this.config.maxHeight;
+			img.id = "picture0";
+			td.appendChild(img);
+
 			var text = document.createElement("p");
 			if (Vehicle.overallStatus === "safe"){
     			text.innerHTML = '<i class="fa-solid fa-lock" style="color:#84dd63">'

@@ -5,7 +5,7 @@
 
 A module to integrale informations from  [We Connect ID](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) into the [MagicMirror](https://github.com/MichMich/MagicMirror).
 
-## I'am a beginner at Programming so I think there are a lot of better ways to implement it. Feel free to send an merge request.  
+## I'am a beginner at Programming so I think there are a lot of better ways to implement it. Feel free to send an merge request.
 
 ## Usage
 
@@ -115,14 +115,23 @@ This module uses [tillsteinbach/WeConnect-python](https://github.com/tillsteinba
 - Volkswagen ID.3 Modelyear 2023
 
 ## Pictures
-Fluent Progress Bar  
+Fluent Progress Bar
 ![ProgressBarFluent](git/ProgressBar_fluent.png)
 
-Strict Progress Bar  
+Strict Progress Bar
 ![ProgressBarStrict](git/ProgressBar_strict.png)
 
-Normal View  
+Normal View
 ![View](git/normal.png)
 
-Charging View  
+Unlocked Car
+![Unlocked](git/normal_unlocked.png)
+
+Open Door and Trunk
+![Doors](git/normal_doors.png)
+
+Open Door and Front Right Window
+![Window](git/normal_window.png)
+
+Charging View
 ![ChargingView](git/charging.gif)

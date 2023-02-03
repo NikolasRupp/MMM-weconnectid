@@ -4,6 +4,7 @@ import json
 from sys import argv
 import requests
 from datetime import datetime, timezone
+import os
 
 def saveElement(element, flags):
     """Simple callback for saving the pictures
@@ -13,7 +14,10 @@ def saveElement(element, flags):
     """
     del flags
     if isinstance(element, addressable.AddressableAttribute) and element.valueType == PIL.Image.Image:
-        element.saveToFile(f'{argv[4]}/{element.localAddress}.png')
+        if element.localAddress == "car" or element.localAddress == "status":
+          if os.path.exists(f'{argv[4]}/{element.localAddress}.png'):
+            os.remove(f'{argv[4]}/{element.localAddress}.png')
+          element.saveToFile(f'{argv[4]}/{element.localAddress}.png')
 
 found_vin = ""
 timestamp = 0
