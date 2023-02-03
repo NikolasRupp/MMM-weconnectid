@@ -9,19 +9,13 @@ A module to integrale informations from  [We Connect ID](https://www.volkswagen.
 
 ## Usage
 
-_Prerequisites_
+### Installation
 
 - You have to register your VW ID at [MyVolkswagen](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) and have a valid WE Connect ID subscription
 
-To use this module, clone this repository to your __modules__ folder of your MagicMirror:
+- You need Python 3.9 or higher to connect to the Api. You can have a look [here](https://raspberrytips.com/install-latest-python-raspberry-pi/) on how to install it.
 
-`cd ~/MagicMirror/modules`
-
-`git clone https://github.com/NikolasRupp/MMM-weconnectid.git`
-
-You need Python 3.9 or higher to connect to the Api. You can have a look [here](https://raspberrytips.com/install-latest-python-raspberry-pi/) on how to install it.
-
-If not done you have to install some Packages via Pip.
+- If not done you have to install some Packages via Pip.
 
 ```
 pip install Pillow
@@ -34,10 +28,15 @@ If Python 3.9 is not your default Python Version your command should look someth
 python3.9 -m pip install Pillow
 python3.9 -m pip install weconnect[Images]
 ```
-
 Have a look at the config Table to see how you set the Python version in the module.
 
-Now just add the module to your config.js file ([config entries](#configuration)).
+- To use this module, clone this repository to your __modules__ folder of your MagicMirror:
+
+`cd ~/MagicMirror/modules`
+
+`git clone https://github.com/NikolasRupp/MMM-weconnectid.git`
+
+- Now just add the module to your config.js file ([config entries](#configuration)).
 
 ### Configuration
 
@@ -116,18 +115,14 @@ This module uses [tillsteinbach/WeConnect-python](https://github.com/tillsteinba
 - Volkswagen ID.3 Modelyear 2023
 
 ## Pictures
-Fluent Progress Bar
-
+Fluent Progress Bar  
 ![ProgressBarFluent](git/ProgressBar_fluent.png)
 
-Strict Progress Bar
-
+Strict Progress Bar  
 ![ProgressBarStrict](git/ProgressBar_strict.png)
 
-Normal View
-
+Normal View  
 ![View](git/normal.png)
 
-Charging View
-
+Charging View  
 ![ChargingView](git/charging.gif)
