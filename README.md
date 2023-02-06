@@ -72,7 +72,7 @@ The following properties can be configured:
 
 |Option|Description|Options|Default|Required|Type|
 |---|---|---|---|---|---|
-|username|Your Login Username|-|-|yes|Text|
+|username|Your Login E-Mail|-|-|yes|Text|
 |password|Your Login Password|-|-|yes|Text|
 |vin|The VIN of your Vehicle|-|-|yes|Text|
 |python|Python u want to use|Any Python higher than 3.9|"python3"|no|Text|
