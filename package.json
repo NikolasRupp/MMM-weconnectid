@@ -1,0 +1,27 @@
+{
+  "name": "mmm-weconnectid",
+  "version": "0.8",
+  "description": "MagicMirror module - show car data from VW We Connect ID",
+  "main": "MMM-weconnectid.js",
+  "keywords": [
+    "magic mirror",
+    "module",
+    "VW"
+  ],
+  "author": "NikolasRupp",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NikolasRupp/MMM-weconnectid/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NikolasRupp/MMM-weconnectid.git"
+  },
+  "dependencies": {
+  },
+  "homepage": "https://github.com/NikolasRupp/MMM-weconnectid#readme",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

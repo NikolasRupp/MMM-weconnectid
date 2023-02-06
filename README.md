@@ -55,6 +55,9 @@ The module needs the default configuration block in your config.js to work.
     username: "",
     password: "",
     vin: "",
+    fields: '{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","POSITION":"position"}',
+    fields_charging : '{"LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph"}',
+    number: 4,
     python: "python3",
     maxHeight: "300px",
     maxWidth: "800px",
@@ -75,6 +78,9 @@ The following properties can be configured:
 |username|Your Login E-Mail|-|-|yes|Text|
 |password|Your Login Password|-|-|yes|Text|
 |vin|The VIN of your Vehicle|-|-|yes|Text|
+|fields|Fields that should be shown [More Information](#fields)|-|'{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph","POSITION":"position"}'|no|Text|
+|fields_charging|Fields that should be shown during charging [More Information](#fields)|-|["LOADING TIME","TARGET SOC","LOADING POWER","KMPH"]|no|List|
+|number|Number of fields in each row|Any Number|4|no|Number|
 |python|Python u want to use|Any Python higher than 3.9|"python3"|no|Text|
 |maxHeight|Max Height of the Pictures|Any px or % value|"300px"|no|Text|
 |maxWidth|Max Width of the Pictures|Any px or % value|"800px"|no|Text|
@@ -82,9 +88,46 @@ The following properties can be configured:
 |remainingSOCred|Percentage when the Progress Bar of the Battery should be red|0-100|20|no|Number|
 |barstyle|Style of the Progress Bar|"fluent", "strict"|"fluent"|no|Text|
 |updateFrequency|Update Frequency|Any Value|600000|no|Number|
-|timestamp|If the Timestamp should be shown|true, false|true|no|Boolean|
+|timestamp|If the Timestamp should be shown. It shows the Date and time when the last update from the car was sent to the VW Server and the Time of the last Update of the Widget|true, false|true|no|Boolean|
 |googleAPI|Googel Maps API Key if you want to convert the Position of the Vehicle to an Adress [More Information](#google-api)|-|-|no|Text|
 |positions|Custum Names for the Parking Position of the Car [More Information](#positions)|-|-|no|List|
+
+#### Fields
+
+You can define which fields you want to see. The Format hast to be valid Json.
+The key will be used as the Header in the Table. You can Name that whatever you like. If you name them like in the default they will be translated vie the translation file.
+
+The following Attributes are available:
+
+|Value|Description|
+|---|---|
+|bonnetDoor|Status of the Bonnet Door (Will also be shown in the Image, so not really necessary)|
+|trunkDoor|Status of the Trunk Door (Will also be shown in the Image, so not really necessary)|
+|frontLeftDoor|Status of the Front Left Door (Will also be shown in the Image, so not really necessary)|
+|frontRightDoor|Status of the Front Right Door (Will also be shown in the Image, so not really necessary)|
+|rearLeftDoor|Status of the Rear Left Door (Will also be shown in the Image, so not really necessary)|
+|rearRightDoor|Status of the Rear Right Door (Will also be shown in the Image, so not really necessary)|
+|overallStatus|If the Vehicle is locked (Will also be shown in the Image, so not really necessary)|
+|frontLeftWindow|Status of the Front Left Window (Will also be shown in the Image, so not really necessary)|
+|frontRightWindow|Status of the Front Right Window (Will also be shown in the Image, so not really necessary)|
+|rearLeftWindow|Status of the Rear Left Window (Will also be shown in the Image, so not really necessary)|
+|rearLRightWindow|Status of the Rear Right Window (Will also be shown in the Image, so not really necessary)|
+|chargePower|Current Charging Power in kWh|
+|chargingState|Current Charging State|
+|remainingSoC|Remaining SoC in %|
+|remainingTime|Remaining Charging Time in h:mm|
+|remainingKm|Remaining km|
+|targetSoC|Target SoC in %|
+|chargekmph|Charging ... km/h|
+|leftLight|Status of left Light|
+|rightLight|Status of Right Light|
+|odometer|Odometer in km|
+|climatisation|Status of Climatisation (Will show the selected Temperature in °C if On|
+|latitude|Latitude of the Car if parked|
+|longitude|Longitude of the Car if parked|
+|position|Position of the Car if parked|
+
+If you want, that some Values like the remaining charging time will only be displayed during charging you can add the header to the list of the fields_charging Parameter.
 
 #### Google Api
 
@@ -120,23 +163,23 @@ This module uses [tillsteinbach/WeConnect-python](https://github.com/tillsteinba
 - Volkswagen ID.3 Modelyear 2023
 
 ## Pictures
-Fluent Progress Bar  
+Fluent Progress Bar
 ![ProgressBarFluent](git/ProgressBar_fluent.png)
 
-Strict Progress Bar  
+Strict Progress Bar
 ![ProgressBarStrict](git/ProgressBar_strict.png)
 
-Normal View  
+Normal View
 ![View](git/normal.png)
 
-Unlocked Car  
+Unlocked Car
 ![Unlocked](git/normal_unlocked.png)
 
-Open Door and Trunk  
+Open Door and Trunk
 ![Doors](git/normal_doors.png)
 
-Open Door and Windows  
+Open Door and Windows
 ![Window](git/normal_window.png)
 
-Charging View  
+Charging View
 ![ChargingView](git/charging.gif)

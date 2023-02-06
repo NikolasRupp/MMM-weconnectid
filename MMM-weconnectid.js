@@ -14,13 +14,13 @@ const Vehicle = {
 	chargingState: "",
 	remainingSoC: 0,
 	remainingKm: 0,
+	remainingTime: 0,
 	chargekmph: 0,
 	targetSoC: 0,
 	leftLight: "off",
 	rightLight: "off",
 	odometer: 0,
 	climatisation: "off",
-	temperature: 0,
 	timestamp: "",
 	latitude: 0,
 	longitude: 0,
@@ -36,6 +36,9 @@ Module.register("MMM-weconnectid", {
     	username: "test@test.com",
     	password: "password",
     	vin: "WV00000000000000",
+    	fields: '{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph","POSITION":"position"}',
+    	fields_charging : ["LOADING TIME","TARGET SOC","LOADING POWER","KMPH"],
+    	number: 4,
     	python: "python3",
     	maxHeight: "300px",
     	maxWidth: "800px",
@@ -106,13 +109,13 @@ Module.register("MMM-weconnectid", {
 			if (Vehicle.chargingState === "charging"){
 				var div = document.createElement("div");
 				div.classList.add("progress2");
-				div.style.background = "linear-gradient(to right,white "+ Vehicle.targetSoC + "%,transparent "+ Vehicle.targetSoC + "%,transparent)"
+				div.style.background = "linear-gradient(to right,white "+ Vehicle.targetSoC.replace(/\D/g, '') + "%,transparent "+ Vehicle.targetSoC.replace(/\D/g, '') + "%,transparent)"
 				td.appendChild(div);
 				var div2 = document.createElement("div");
 				div2.classList.add("progress-bar2-charging");
-				div2.style.animation = "progress "+ (1000+(4000*Vehicle.remainingSoC/100)) + "ms infinite linear";
-				div2.style.setProperty('--my-middle-width', (Vehicle.remainingSoC/2) + "%" );
-				div2.style.setProperty('--my-end-width', Vehicle.remainingSoC + "%" );
+				div2.style.animation = "progress "+ (1000+(4000*Vehicle.remainingSoC.replace(/\D/g, '')/100)) + "ms infinite linear";
+				div2.style.setProperty('--my-middle-width', (Vehicle.remainingSoC.replace(/\D/g, '')/2) + "%" );
+				div2.style.setProperty('--my-end-width', Vehicle.remainingSoC.replace(/\D/g, '') + "%" );
 				div.appendChild(div2);
 			} else {
 				var div = document.createElement("div");
@@ -125,7 +128,7 @@ Module.register("MMM-weconnectid", {
 				td.appendChild(div);
 				var div2 = document.createElement("div");
 				div2.classList.add("progress-bar2");
-				div2.style.width = (100 - Vehicle.remainingSoC)+ "%"
+				div2.style.width = (100 - Vehicle.remainingSoC.replace(/\D/g, ''))+ "%"
 				div.appendChild(div2);
 			}
 
@@ -134,141 +137,42 @@ Module.register("MMM-weconnectid", {
     		var table = document.createElement("table");
     		tr.append(table)
 
-			var tr = document.createElement("tr");
-    		table.appendChild(tr);
-    		var th = document.createElement("th");
-    		th.id = "text-table"
-    		var text = document.createElement("p");
-    		text.innerHTML = this.translate("SOC")
-    		text.id = "info-header";
-			th.appendChild(text);
-    		tr.appendChild(th);
-    		var th = document.createElement("th");
-    		th.id = "text-table"
-    		var text = document.createElement("p");
-    		text.innerHTML = this.translate("RANGE")
-    		text.id = "info-header";
-    		th.appendChild(text);
-    		tr.appendChild(th);
-    		var th = document.createElement("th");
-    		th.id = "text-table"
-    		var text = document.createElement("p");
-    		text.innerHTML = this.translate("CLIMATE")
-    		text.id = "info-header";
-    		th.appendChild(text);
-    		tr.appendChild(th);
-    		var th = document.createElement("th");
-    		th.id = "text-table"
-    		var text = document.createElement("p");
-    		text.innerHTML = this.translate("ODOMETER")
-    		text.id = "info-header";
-    		th.appendChild(text);
-    		tr.appendChild(th);
+			var counter = 0
+			var fieldJSON = JSON.parse(this.config.fields)
+			for (const x in fieldJSON) {
+				if ((Vehicle.chargingState === "charging" && this.config.fields_charging.includes(x)) || !this.config.fields_charging.includes(x)) {
+					if (counter === 0){
+						var tr_header = document.createElement("tr");
+    					table.appendChild(tr_header);
+    					var tr_text = document.createElement("tr");
+    					table.appendChild(tr_text);
+					}
 
-    		var tr = document.createElement("tr");
-    		table.appendChild(tr);
-    		var td = document.createElement("td");
-    		td.id = "text-table"
-    		var text = document.createElement("p");
-    		text.innerHTML = Vehicle.remainingSoC + " %";
-    		text.id = "info";
-    		td.appendChild(text);
-			tr.appendChild(td);
-    		var td = document.createElement("td");
-    		td.id = "text-table"
-    		var text = document.createElement("p");
-    		text.innerHTML = Vehicle.remainingKm + " km";
-    		text.id = "info";
-    		td.appendChild(text);
-			tr.appendChild(td);
-			var td = document.createElement("td");
-    		td.id = "text-table"
-    		var text = document.createElement("p");
-    		if (Vehicle.climatisation === "off"){
-    			text.innerHTML = this.translate("OFF")
-    		} else {
-    			text.innerHTML = Vehicle.temperature + " °C"
-    		}
-    		text.id = "info";
-    		td.appendChild(text);
-			tr.appendChild(td);
-			var td = document.createElement("td");
-    		td.id = "text-table"
-    		var text = document.createElement("p");
-    		text.innerHTML = Vehicle.odometer + " km";
-    		text.id = "info";
-    		td.appendChild(text);
-			tr.appendChild(td);
+					var th = document.createElement("th");
+    				th.id = "text-table"
+    				th.style.width = (100/this.config.number) + "%";
+    				var text = document.createElement("p");
+    				text.innerHTML = this.translate(x)
+    				text.id = "info-header";
+					th.appendChild(text);
+    				tr_header.appendChild(th);
 
+					var td = document.createElement("td");
+    				td.id = "text-table"
+    				td.style.width = (100/this.config.number) + "%";
+    				var text = document.createElement("p");
+    				text.innerHTML = this.translate(Vehicle[fieldJSON[x]]);
+    				text.id = "info";
+    				td.appendChild(text);
+					tr_text.appendChild(td);
 
-			var tr = document.createElement("tr");
-    		table.appendChild(tr);
-    		var th = document.createElement("th");
-    		th.id = "text-table"
-    		var text = document.createElement("p");
-    		text.innerHTML = this.translate("POSITION")
-    		text.id = "info-header";
-			th.appendChild(text);
-    		tr.appendChild(th);
-
-    		if (Vehicle.chargingState === "charging"){
-    			var th = document.createElement("th");
-    			th.id = "text-table"
-    			var text = document.createElement("p");
-    			text.innerHTML = this.translate("TARGET SOC")
-    			text.id = "info-header";
-				th.appendChild(text);
-    			tr.appendChild(th);
-    			var th = document.createElement("th");
-    			th.id = "text-table"
-    			var text = document.createElement("p");
-    			text.innerHTML = this.translate("LOADING CURRENT")
-    			text.id = "info-header";
-    			th.appendChild(text);
-    			tr.appendChild(th);
-    			var th = document.createElement("th");
-    			th.id = "text-table"
-    			var text = document.createElement("p");
-    			text.innerHTML = this.translate("KMPH")
-    			text.id = "info-header";
-    			th.appendChild(text);
-    			tr.appendChild(th);
+					if (counter+1 < this.config.number){
+						counter = counter+1
+					} else {
+						counter = 0
+					}
+				}
 			}
-
-    		var tr = document.createElement("tr");
-    		table.appendChild(tr);
-    		var td = document.createElement("td");
-    		td.id = "text-table"
-    		var text = document.createElement("p");
-    		text.innerHTML = this.translate(Vehicle.position);
-    		text.id = "info";
-    		td.appendChild(text);
-			tr.appendChild(td);
-
-			if (Vehicle.chargingState === "charging"){
-    			var td = document.createElement("td");
-    			td.id = "text-table"
-    			var text = document.createElement("p");
-    			text.innerHTML = Vehicle.targetSoC + " %";
-    			text.id = "info";
-    			td.appendChild(text);
-				tr.appendChild(td);
-				var td = document.createElement("td");
-    			td.id = "text-table"
-    			var text = document.createElement("p");
-    			text.innerHTML = Vehicle.chargePower + " kWh";
-    			text.id = "info";
-    			td.appendChild(text);
-				tr.appendChild(td);
-				var td = document.createElement("td");
-    			td.id = "text-table"
-    			var text = document.createElement("p");
-    			text.innerHTML = Vehicle.chargekmph;
-    			text.id = "info";
-    			td.appendChild(text);
-				tr.appendChild(td);
-    		}
-
 		}
 
 		if (this.config.timestamp === true || Vehicle.status === 0 || Vehicle.status === -1){
@@ -309,31 +213,35 @@ Module.register("MMM-weconnectid", {
 			payload = payload.replace(/'/g, '"');
 			const obj = JSON.parse(payload)
 			if (obj["status"] === 1) {
-				Vehicle.bonnetDoor = obj["access"]["doors"]["bonnet"]
-				Vehicle.trunkDoor = obj["access"]["doors"]["trunk"]
-				Vehicle.frontLeftDoor = obj["access"]["doors"]["frontLeft"]
-				Vehicle.frontRightDoor = obj["access"]["doors"]["frontRight"]
-				Vehicle.rearRightDoor = obj["access"]["doors"]["rearRight"]
-				Vehicle.rearLeftDoor = obj["access"]["doors"]["rearLeft"]
-				Vehicle.overallStatus = obj["access"]["overallStatus"]
-				Vehicle.frontLeftWindow = obj["access"]["windows"]["frontLeft"]
-				Vehicle.frontRightWindow = obj["access"]["windows"]["frontRight"]
-				Vehicle.rearRightWindow = obj["access"]["windows"]["rearRight"]
-				Vehicle.rearLeftWindow = obj["access"]["windows"]["rearLeft"]
-				Vehicle.chargePower = obj["charging"]["chargePower"]
-				Vehicle.chargingState = obj["charging"]["chargingState"]
-				Vehicle.remainingSoC = obj["charging"]["remainingSoC"]
-				Vehicle.remainingKm = obj["charging"]["remainingKm"]
-				Vehicle.targetSoC = obj["charging"]["targetSoC"]
-				Vehicle.chargekmph = obj["charging"]["kmph"]
-				Vehicle.leftLight = obj["lights"]["left"]
-				Vehicle.rightLight = obj["lights"]["right"]
-				Vehicle.odometer = obj["measurements"]["odometer"]
-				Vehicle.climatisation = obj["climatisation"]["status"]
-				Vehicle.temperature = obj["climatisation"]["temperature"]
-				Vehicle.timestamp = obj["measurements"]["timestamp"]
-				Vehicle.latitude = obj["parking"]["latitude"]
-				Vehicle.longitude = obj["parking"]["longitude"]
+				Vehicle.bonnetDoor = obj["bonnetDoor"]
+				Vehicle.trunkDoor = obj["trunkDoor"]
+				Vehicle.frontLeftDoor = obj["frontLeftDoor"]
+				Vehicle.frontRightDoor = obj["frontRightDoor"]
+				Vehicle.rearRightDoor = obj["rearRightDoor"]
+				Vehicle.rearLeftDoor = obj["rearLeftDoor"]
+				Vehicle.overallStatus = obj["overallStatus"]
+				Vehicle.frontLeftWindow = obj["frontLeftWindow"]
+				Vehicle.frontRightWindow = obj["frontRightWindow"]
+				Vehicle.rearRightWindow = obj["rearRightWindow"]
+				Vehicle.rearLeftWindow = obj["rearLeftWindow"]
+				Vehicle.chargePower = obj["chargePower"] + " kWh"
+				Vehicle.chargingState = obj["chargingState"]
+				Vehicle.remainingSoC = obj["remainingSoC"] + " %"
+				Vehicle.remainingTime = obj["remainingChargingTime"]
+				Vehicle.remainingKm = obj["remainingKm"] + " km"
+				Vehicle.targetSoC = obj["targetSoC"] + " %"
+				Vehicle.chargekmph = obj["kmph"]
+				Vehicle.leftLight = obj["leftLight"]
+				Vehicle.rightLight = obj["rightLight"]
+				Vehicle.odometer = obj["odometer"] + " km"
+				if (obj["climatisation"] === "off") {
+					Vehicle.climatisation = obj["climatisation"]
+				} else {
+					Vehicle.climatisation = obj["temperature"] + " °C"
+				}
+				Vehicle.timestamp = obj["timestamp"]
+				Vehicle.latitude = obj["latitude"]
+				Vehicle.longitude = obj["longitude"]
 				Vehicle.position = ""
 				for (i=0; i<this.config.positions.length; i++){
 					distance = Math.acos(Math.sin((this.config.positions[i][1])*Math.PI/180) * Math.sin(Vehicle.latitude*Math.PI/180) + Math.cos((this.config.positions[i][1])*Math.PI/180) * Math.cos(Vehicle.latitude*Math.PI/180) * Math.cos(((this.config.positions[i][2])*Math.PI/180) - (Vehicle.longitude*Math.PI/180))) * 6371000
@@ -342,7 +250,7 @@ Module.register("MMM-weconnectid", {
 					}
 				}
 				if (Vehicle.position === ""){
-					Vehicle.position = obj["parking"]["position"]
+					Vehicle.position = obj["position"]
      			}
 				Vehicle.status = obj["status"]
 			} else {
