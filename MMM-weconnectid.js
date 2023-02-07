@@ -1,25 +1,25 @@
 const Vehicle = {
-	bonnetDoor: "open",
-	trunkDoor: "open",
-	frontLeftDoor: "open",
-	frontRightDoor: "open",
-	rearRightDoor: "open",
-	rearLeftDoor: "open",
+	bonnetDoor: "closed",
+	trunkDoor: "closed",
+	frontLeftDoor: "closed",
+	frontRightDoor: "closed",
+	rearRightDoor: "closed",
+	rearLeftDoor: "closed",
 	overallStatus: "safe",
-	frontLeftWindow: "open",
-	frontRightWindow: "open",
-	rearRightWindow: "open",
-	rearLeftWindow: "open",
-	chargePower: 0,
+	frontLeftWindow: "closed",
+	frontRightWindow: "closed",
+	rearRightWindow: "closed",
+	rearLeftWindow: "closed",
+	chargePower: "0 kWh",
 	chargingState: "",
-	remainingSoC: 0,
-	remainingKm: 0,
-	remainingTime: 0,
+	remainingSoC: "0 %",
+	remainingKm: "0",
+	remainingTime: "00:00",
 	chargekmph: 0,
-	targetSoC: 0,
+	targetSoC: "0 %",
 	leftLight: "off",
 	rightLight: "off",
-	odometer: 0,
+	odometer: "0 km",
 	climatisation: "off",
 	timestamp: "",
 	latitude: 0,
@@ -60,7 +60,8 @@ Module.register("MMM-weconnectid", {
 
 	getTranslations: function() {
 		return {
-			de: "translations/de.json"
+			de: "translations/de.json",
+			en: "translations/en.json"
 		}
 	},
 

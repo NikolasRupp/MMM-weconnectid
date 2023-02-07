@@ -5,12 +5,32 @@
 
 A module to integrale informations from  [We Connect ID](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) into the [MagicMirror](https://github.com/MichMich/MagicMirror).
 
+- [Alternative](#alternative)
 - [Usage](#usage)
 - [Credits](#credits)
 - [Tested with](#tested-with)
 - [Pictures](#pictures)
 
 ## I'am a beginner at Programming so I think there are a lot of better ways to implement it. Feel free to send an merge request.
+
+## Alternative
+This Module:
+
+Advantage:
+- Will use the Pictures provided by the API
+- Location of your Car
+
+Disadvantage:
+- Only works with Python 3.9 or higher
+
+[Alternative Module](https://github.com/NikolasRupp/MMM-weconnectid-alt):
+
+Advantage:
+- Works with nearly every Python Version
+
+Disadvantage:
+- No Pictures of your own car (Always a white ID.3)
+- No Location of the Car
 
 ## Usage
 
@@ -28,6 +48,7 @@ cd Python-3.9.15
 ./configure --enable-optimizations
 sudo make altinstall
 ```
+
 If you use this description you need to set the python Parameter in the config to 3.9 and use python3.9 -m ... to install the packages.
 
 - If not done you have to install some Packages via Pip.
@@ -43,6 +64,7 @@ If Python 3.9 is not your default Python Version your command should look someth
 python3.9 -m pip install Pillow
 python3.9 -m pip install weconnect[Images]
 ```
+
 Have a look at the config Table to see how you set the Python version in the module.
 
 - To use this module, clone this repository to your __modules__ folder of your MagicMirror:
@@ -66,8 +88,8 @@ The module needs the default configuration block in your config.js to work.
     username: "",
     password: "",
     vin: "",
-    fields: '{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","POSITION":"position"}',
-    fields_charging : '{"LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph"}',
+    fields: '{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph","POSITION":"position"}',
+    fields_charging : ["LOADING TIME","TARGET SOC","LOADING POWER","KMPH"],
     number: 4,
     python: "python3",
     maxHeight: "300px",
@@ -82,6 +104,7 @@ The module needs the default configuration block in your config.js to work.
   }
 },
 ```
+
 The following properties can be configured:
 
 |Option|Description|Options|Default|Required|Type|
@@ -101,7 +124,7 @@ The following properties can be configured:
 |updateFrequency|Update Frequency|Any Value|600000|no|Number|
 |timestamp|If the Timestamp should be shown. It shows the Date and time when the last update from the car was sent to the VW Server and the Time of the last Update of the Widget|true, false|true|no|Boolean|
 |googleAPI|Googel Maps API Key if you want to convert the Position of the Vehicle to an Adress [More Information](#google-api)|-|-|no|Text|
-|positions|Custum Names for the Parking Position of the Car [More Information](#positions)|-|-|no|List|
+|positions|Custom Names for the Parking Position of the Car [More Information](#positions)|-|-|no|List|
 
 #### Fields
 
