@@ -18,7 +18,17 @@ A module to integrale informations from  [We Connect ID](https://www.volkswagen.
 
 - You have to register your VW ID at [MyVolkswagen](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) and have a valid WE Connect ID subscription
 
-- You need Python 3.9 or higher to connect to the Api. You can have a look [here](https://raspberrytips.com/install-latest-python-raspberry-pi/) on how to install it.
+- You need Python 3.9 or higher to connect to the Api. You can have a look [here](https://raspberrytips.com/install-latest-python-raspberry-pi/) on how to install it. Short it works like this:
+
+```
+cd ~
+wget https://www.python.org/ftp/python/3.9.15/Python-3.9.15.tgz
+tar -zxvf Python-3.9.15.tgz
+cd Python-3.9.15
+./configure --enable-optimizations
+sudo make altinstall
+```
+If you use this description you need to set the python Parameter in the config to 3.9 and use python3.9 -m ... to install the packages.
 
 - If not done you have to install some Packages via Pip.
 
@@ -37,9 +47,10 @@ Have a look at the config Table to see how you set the Python version in the mod
 
 - To use this module, clone this repository to your __modules__ folder of your MagicMirror:
 
-`cd ~/MagicMirror/modules`
-
-`git clone https://github.com/NikolasRupp/MMM-weconnectid.git`
+```
+cd ~/MagicMirror/modules
+git clone https://github.com/NikolasRupp/MMM-weconnectid.git
+```
 
 - Now just add the module to your config.js file ([config entries](#configuration)).
 
@@ -132,6 +143,9 @@ If you want, that some Values like the remaining charging time will only be disp
 #### Google Api
 
 You can get your Google API Key [here](https://developers.google.com/maps/documentation/javascript/get-api-key?hl=de)
+
+Unfortunately you need a Credit Card, even though you don't have to pay anything.
+
 If you have logged in you can create an Project and call it whatever you like. In that Project you have to activate the Geocoding API and copy the API Key in the config file.
 
 There is a Price for the API but you get 200$ every moth for free what are about 40.000 API requests, which are about 1 every Minute, which should be enough. You can read more about it [here](https://mapsplatform.google.com/intl/de/pricing/).
@@ -139,6 +153,9 @@ There is a Price for the API but you get 200$ every moth for free what are about
 If you don't enter an API key the Location, if not defined in [Positions](#positions) will be shown as __unkown__.
 
 #### Positions
+
+Note: This also works without Google API Key
+
 You can define Positions where your car is parked often. You can Enter as many locations as you want. To get the Latitude and Longitude you can use any website like [gps-coordinates.net](https://www.gps-coordinates.net/).
 
 Each Position has to have the following Parameter
