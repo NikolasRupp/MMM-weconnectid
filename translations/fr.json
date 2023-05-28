@@ -1,0 +1,15 @@
+{
+	"ODOMETER": "Odomètre",
+	"SOC": "Etat de charge",
+	"RANGE": "Autonomie",
+	"CLIMATE": "Climate",
+	"LOADING TIME": "Temps chargement",
+	"LOADING POWER": "Puissance",
+	"TARGET SOC": "Charge cible",
+	"off": "Eteint",
+	"on": "Allumé",
+	"KMPH": "Chargement km/h",
+	"POSITION": "Localisation",
+	"UNKNOWN": "Inconnue",
+	"DRIVING": "En route"
+}
