@@ -119,6 +119,8 @@ try:
                     "targetSoC": ["domains","charging","chargingSettings","targetSOC_pct"],
                     "kmph": ["domains","charging","chargingStatus","chargeRate_kmph"],
                     "odometer": ["domains", "measurements", "odometerStatus", "odometer"],
+                    "electricRange": ["domains", "measurements", "rangeStatus", "electricRange"],
+                    "gasolineRange": ["domains", "measurements", "rangeStatus", "gasolineRange"],
                     "climatisation": ["domains","climatisation","climatisationStatus","climatisationState"],
                     "temperature": ["domains","climatisation","climatisationSettings","targetTemperature_C"],
                     "model": ["model"]

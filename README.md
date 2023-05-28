@@ -156,6 +156,8 @@ The following Attributes are available:
 |leftLight|Status of left Light|
 |rightLight|Status of Right Light|
 |odometer|Odometer in km|
+|electricRange|Range of the vehicle in electric mode (for PHEV vehicles)|
+|gasolineRange|Range of the vehicle in gasoline mode (for PHEV vehicles)|
 |climatisation|Status of Climatisation (Will show the selected Temperature in °C if On|
 |latitude|Latitude of the Car if parked|
 |longitude|Longitude of the Car if parked|
@@ -201,6 +203,7 @@ This module uses [tillsteinbach/WeConnect-python](https://github.com/tillsteinba
 
 ## Tested with
 - Volkswagen ID.3 Modelyear 2023
+- Volkswagen Passat Variant GTE Modelyear 2017
 
 ## Pictures
 Fluent Progress Bar
