@@ -1,5 +1,5 @@
 try:
-  import PIL
+  from PIL import Image
   from weconnect import weconnect, addressable
   import json
   from sys import argv
@@ -22,7 +22,7 @@ def saveElement(element, flags):
         flags (AddressableLeaf.ObserverEvent): Information about the type of the event
     """
     del flags
-    if isinstance(element, addressable.AddressableAttribute) and element.valueType == PIL.Image.Image:
+    if isinstance(element, addressable.AddressableAttribute) and element.valueType == Image.Image:
         if element.localAddress == "car" or element.localAddress == "status":
           if os.path.exists(f'{argv[4]}/{element.localAddress}.png'):
             os.remove(f'{argv[4]}/{element.localAddress}.png')
@@ -119,6 +119,8 @@ try:
                     "targetSoC": ["domains","charging","chargingSettings","targetSOC_pct"],
                     "kmph": ["domains","charging","chargingStatus","chargeRate_kmph"],
                     "odometer": ["domains", "measurements", "odometerStatus", "odometer"],
+                    "electricRange": ["domains", "measurements", "rangeStatus", "electricRange"],
+                    "gasolineRange": ["domains", "measurements", "rangeStatus", "gasolineRange"],
                     "climatisation": ["domains","climatisation","climatisationStatus","climatisationState"],
                     "temperature": ["domains","climatisation","climatisationSettings","targetTemperature_C"],
                     "model": ["model"]

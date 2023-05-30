@@ -20,6 +20,8 @@ const Vehicle = {
 	leftLight: "off",
 	rightLight: "off",
 	odometer: "0 km",
+        electricRange: "0 km",
+        gasolineRange: "0 km",
 	climatisation: "off",
 	timestamp: "",
 	latitude: 0,
@@ -235,6 +237,8 @@ Module.register("MMM-weconnectid", {
 				Vehicle.leftLight = obj["leftLight"]
 				Vehicle.rightLight = obj["rightLight"]
 				Vehicle.odometer = obj["odometer"] + " km"
+                                Vehicle.electricRange = obj["electricRange"] + " km"
+                                Vehicle.gasolineRange = obj["gasolineRange"] + " km"
 				if (obj["climatisation"] === "off") {
 					Vehicle.climatisation = obj["climatisation"]
 				} else {
