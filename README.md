@@ -11,7 +11,7 @@ A module to integrale informations from  [We Connect ID](https://www.volkswagen.
 - [Tested with](#tested-with)
 - [Pictures](#pictures)
 
-## I'am a beginner at Programming so I think there are a lot of better ways to implement it. Feel free to send an merge request.
+## I currently don't have a MM so notify me when something is not working. Feel free to send an merge request.
 
 ## Alternative
 This Module:
