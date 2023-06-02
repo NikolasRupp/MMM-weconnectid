@@ -62,8 +62,9 @@ Module.register("MMM-weconnectid", {
 
 	getTranslations: function() {
 		return {
+                        en: "translations/en.json",
 			de: "translations/de.json",
-			en: "translations/en.json"
+			fr: "translations/fr.json"
 		}
 	},
 
