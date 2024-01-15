@@ -65,11 +65,15 @@ try:
             exit()
           for key1 in vehicle["domains"].keys():
             for key2 in vehicle["domains"][key1].keys():
-              if "carCapturedTimestamp" in vehicle["domains"][key1][key2].keys():
-                temp_timestamp = datetime.timestamp(datetime.strptime(vehicle["domains"][key1][key2]["carCapturedTimestamp"],'%Y-%m-%dT%H:%M:%S+00:00'))
-                if temp_timestamp > timestamp:
-                  timestamp = temp_timestamp
-          timestamp = datetime.fromtimestamp(timestamp).replace(tzinfo=timezone.utc).astimezone(tz=None).strftime("%d.%m.%Y %H:%M")
+              try:
+                if "carCapturedTimestamp" in vehicle["domains"][key1][key2].keys():
+                  temp_timestamp = datetime.timestamp(datetime.strptime(vehicle["domains"][key1][key2]["carCapturedTimestamp"],'%Y-%m-%dT%H:%M:%S+00:00'))
+                  if temp_timestamp > timestamp:
+                    timestamp = temp_timestamp
+              except Exception as e:
+                timestamp = "Not available"
+          if timestamp != 0 and timestamp != "Not available":
+            timestamp = datetime.fromtimestamp(timestamp).replace(tzinfo=timezone.utc).astimezone(tz=None).strftime("%d.%m.%Y %H:%M")
           if "parking" in vehicle['domains']:
             latitude = vehicle['domains']['parking']['parkingPosition']['latitude']
             longitude = vehicle['domains']['parking']['parkingPosition']['longitude']
