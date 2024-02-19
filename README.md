@@ -3,7 +3,7 @@
 
 # MMM-weconnectid
 
-A module to integrale informations from  [We Connect ID](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) into the [MagicMirror](https://github.com/MagicMirrorOrg/MagicMirror).
+A module to integrale informations from [We Connect ID](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) into the [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror).
 
 - [Alternative](#alternative)
 - [Usage](#usage)
@@ -11,24 +11,29 @@ A module to integrale informations from  [We Connect ID](https://www.volkswagen.
 - [Tested with](#tested-with)
 - [Pictures](#pictures)
 
-## I currently don't have a MM so notify me when something is not working. Feel free to send an merge request.
+## I currently don't have a MM so notify me when something is not working. Feel free to send an merge request
 
 ## Alternative
-This Module:
+
+This module:
 
 Advantage:
+
 - Will use the Pictures provided by the API
 - Location of your Car
 
 Disadvantage:
+
 - Only works with Python 3.9 or higher
 
 [Alternative Module](https://github.com/NikolasRupp/MMM-weconnectid-alt):
 
 Advantage:
+
 - Works with nearly every Python Version
 
 Disadvantage:
+
 - No Pictures of your own car (Always a white ID.3)
 - No Location of the Car
 
@@ -40,7 +45,7 @@ Disadvantage:
 
 - You need Python 3.9 or higher to connect to the Api. You can have a look [here](https://raspberrytips.com/install-latest-python-raspberry-pi/) on how to install it. Short it works like this:
 
-```
+```shell
 cd ~
 wget https://www.python.org/ftp/python/3.9.15/Python-3.9.15.tgz
 tar -zxvf Python-3.9.15.tgz
@@ -53,14 +58,14 @@ If you use this description you need to set the python Parameter in the config t
 
 - If not done you have to install some Packages via Pip.
 
-```
+```shell
 pip install Pillow
 pip install weconnect[Images]
 ```
 
 If Python 3.9 is not your default Python Version your command should look something like this.
 
-```
+```shell
 python3.9 -m pip install Pillow
 python3.9 -m pip install weconnect[Images]
 ```
@@ -69,9 +74,9 @@ Have a look at the config Table to see how you set the Python version in the mod
 
 - To use this module, clone this repository to your __modules__ folder of your MagicMirror:
 
-```
+```shell
 cd ~/MagicMirror/modules
-git clone https://github.com/NikolasRupp/MMM-weconnectid.git
+git clone https://github.com/NikolasRupp/MMM-weconnectid
 ```
 
 - Now just add the module to your config.js file ([config entries](#configuration)).
@@ -158,7 +163,7 @@ The following Attributes are available:
 |odometer|Odometer in km|
 |electricRange|Range of the vehicle in electric mode (for PHEV vehicles)|
 |gasolineRange|Range of the vehicle in gasoline mode (for PHEV vehicles)|
-|climatisation|Status of Climatisation (Will show the selected Temperature in °C if On|
+|climatisation|Status of Climatisation (Will show the selected Temperature in °C if On)|
 |latitude|Latitude of the Car if parked|
 |longitude|Longitude of the Car if parked|
 |position|Position of the Car if parked|
@@ -179,11 +184,11 @@ If you don't enter an API key the Location, if not defined in [Positions](#posit
 
 #### Positions
 
-Note: This also works without Google API Key
+Note: This also works without Google API Key.
 
 You can define Positions where your car is parked often. You can Enter as many locations as you want. To get the Latitude and Longitude you can use any website like [gps-coordinates.net](https://www.gps-coordinates.net/).
 
-Each Position has to have the following Parameter
+Each Position has to have the following Parameter:
 
 |Paramter|Description|Type|
 |---|---|---|
@@ -192,20 +197,23 @@ Each Position has to have the following Parameter
 |Longitude|Longitude of the Position|Number|
 |Radius|Radius around the Coordinates|Number|
 
-
 An Example would be
-```
+
+```javascript
 [["Home",38.8796005249,-76.983428955,50],["Work",52.51385794,13.35827382,300]]
 ```
 
 ## Credits
-This module uses [tillsteinbach/WeConnect-python](https://github.com/tillsteinbach/WeConnect-python) to connect to the API. Many thanks for that
+
+This module uses [tillsteinbach/WeConnect-python](https://github.com/tillsteinbach/WeConnect-python) to connect to the API. Many thanks for that.
 
 ## Tested with
+
 - Volkswagen ID.3 Modelyear 2023
 - Volkswagen Passat Variant GTE Modelyear 2017
 
 ## Pictures
+
 Fluent Progress Bar
 ![ProgressBarFluent](git/ProgressBar_fluent.png)
 
