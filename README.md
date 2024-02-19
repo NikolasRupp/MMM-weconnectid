@@ -3,7 +3,7 @@
 
 # MMM-weconnectid
 
-A module to integrale informations from  [We Connect ID](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) into the [MagicMirror](https://github.com/MichMich/MagicMirror).
+A module to integrale informations from  [We Connect ID](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) into the [MagicMirror](https://github.com/MagicMirrorOrg/MagicMirror).
 
 - [Alternative](#alternative)
 - [Usage](#usage)
