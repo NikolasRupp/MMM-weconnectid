@@ -221,7 +221,7 @@ Strict Progress Bar
 ![ProgressBarStrict](git/ProgressBar_strict.png)
 
 Normal View
-![View](git/normal.png)
+![View](git/normal_screenshot.png)
 
 Unlocked Car
 ![Unlocked](git/normal_unlocked.png)
