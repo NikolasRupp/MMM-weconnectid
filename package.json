@@ -1,7 +1,7 @@
 {
   "name": "mmm-weconnectid",
   "version": "0.8.0",
-  "description": "MagicMirror module - show car data from VW We Connect ID",
+  "description": "MagicMirror² module - show car data from VW We Connect ID.",
   "main": "MMM-weconnectid.js",
   "keywords": [
     "magic mirror",
