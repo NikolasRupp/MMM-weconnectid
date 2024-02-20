@@ -204,66 +204,104 @@ Module.register("MMM-weconnectid", {
   	start: function() {
 		var self = this;
 		var config = this.config
-		self.sendSocketNotification("DO_PYTHON", config);
-		setInterval(function() {
-            self.sendSocketNotification("DO_PYTHON", config);
-    	}, this.config.updateFrequency);
+			self.sendSocketNotification("DO_PYTHON", { id: this.identifier, config: config });
+		setInterval(() =>{
+			self.sendSocketNotification("DO_PYTHON", { id: this.identifier, config: config });
+    	}, config.updateFrequency);
   	},
 
   	socketNotificationReceived: function(notification, payload) {
   		var self = this;
-		if (notification === "PYTHON_DONE") {
-			Log.log(notification);
-			payload = payload.replace(/'/g, '"');
-			const obj = JSON.parse(payload)
-			if (obj["status"] === 1) {
-				Vehicle.bonnetDoor = obj["bonnetDoor"]
-				Vehicle.trunkDoor = obj["trunkDoor"]
-				Vehicle.frontLeftDoor = obj["frontLeftDoor"]
-				Vehicle.frontRightDoor = obj["frontRightDoor"]
-				Vehicle.rearRightDoor = obj["rearRightDoor"]
-				Vehicle.rearLeftDoor = obj["rearLeftDoor"]
-				Vehicle.overallStatus = obj["overallStatus"]
-				Vehicle.frontLeftWindow = obj["frontLeftWindow"]
-				Vehicle.frontRightWindow = obj["frontRightWindow"]
-				Vehicle.rearRightWindow = obj["rearRightWindow"]
-				Vehicle.rearLeftWindow = obj["rearLeftWindow"]
-				Vehicle.chargePower = obj["chargePower"] + " kWh"
-				Vehicle.chargingState = obj["chargingState"]
-				Vehicle.remainingSoC = obj["remainingSoC"] + " %"
-				Vehicle.remainingTime = obj["remainingChargingTime"]
-				Vehicle.remainingKm = obj["remainingKm"] + " km"
-				Vehicle.targetSoC = obj["targetSoC"] + " %"
-				Vehicle.chargekmph = obj["kmph"]
-				Vehicle.leftLight = obj["leftLight"]
-				Vehicle.rightLight = obj["rightLight"]
-				Vehicle.odometer = obj["odometer"] + " km"
-                                Vehicle.electricRange = obj["electricRange"] + " km"
-                                Vehicle.gasolineRange = obj["gasolineRange"] + " km"
-				if (obj["climatisation"] === "off") {
-					Vehicle.climatisation = obj["climatisation"]
-				} else {
-					Vehicle.climatisation = obj["temperature"] + " °C"
-				}
-				Vehicle.timestamp = obj["timestamp"]
-				Vehicle.latitude = obj["latitude"]
-				Vehicle.longitude = obj["longitude"]
-				Vehicle.position = ""
-				for (i=0; i<this.config.positions.length; i++){
-					distance = Math.acos(Math.sin((this.config.positions[i][1])*Math.PI/180) * Math.sin(Vehicle.latitude*Math.PI/180) + Math.cos((this.config.positions[i][1])*Math.PI/180) * Math.cos(Vehicle.latitude*Math.PI/180) * Math.cos(((this.config.positions[i][2])*Math.PI/180) - (Vehicle.longitude*Math.PI/180))) * 6371000
-					if (distance <= this.config.positions[i][3]){
-						Vehicle.position = this.config.positions[i][0]
+			if (notification === "PYTHON_DONE") {
+				// if this response is because of this modules request
+				if (payload.id === this.identifier) {
+					Log.log(notification);
+					payload = payload.replace(/'/g, '"');
+					const obj = JSON.parse(payload)
+					//  Vehicle = obj  // quicker 
+					if (obj["status"] === 1) {
+						/* you could do this a quicker way, less code, most already set. += on string is append ) */
+						/*
+						Vehicle.chargePower  += " kWh"
+						Vehicle.chargePower  += " kWh"
+						Vehicle.remainingKm  += " km"
+						Vehicle.targetSoC    += " %"
+						Vehicle.odometer     += " km"
+						Vehicle.electricRange  += " km"
+						Vehicle.gasolineRange  += " km"
+						// if climatisation has a value
+						if (Vehicle.climatisation !== "off") {
+							// append temp
+							Vehicle.climatisation  += " °C"
+
+						// save current value
+						let tempPosition = Vehicle.position
+						// recalc is possible
+							for (i = 0; i < this.config.positions.length; i++) {
+								distance = Math.acos(Math.sin((this.config.positions[i][1]) * Math.PI / 180) * Math.sin(Vehicle.latitude * Math.PI / 180) + Math.cos((this.config.positions[i][1]) * Math.PI / 180) * Math.cos(Vehicle.latitude * Math.PI / 180) * Math.cos(((this.config.positions[i][2]) * Math.PI / 180) - (Vehicle.longitude * Math.PI / 180))) * 6371000
+								if (distance <= this.config.positions[i][3]) {
+									tempPosition = this.config.positions[i][0]
+								}
+							}
+						// if recalculated or original is set							
+						if (tempPosition !== "") {
+							// use it
+							Vehicle.position = temPosition
+						}
+						*/
+						/* if quicker all of this qould go away */
+						Vehicle.bonnetDoor = obj["bonnetDoor"]
+						Vehicle.trunkDoor = obj["trunkDoor"]
+						Vehicle.frontLeftDoor = obj["frontLeftDoor"]
+						Vehicle.frontRightDoor = obj["frontRightDoor"]
+						Vehicle.rearRightDoor = obj["rearRightDoor"]
+						Vehicle.rearLeftDoor = obj["rearLeftDoor"]
+						Vehicle.overallStatus = obj["overallStatus"]
+						Vehicle.frontLeftWindow = obj["frontLeftWindow"]
+						Vehicle.frontRightWindow = obj["frontRightWindow"]
+						Vehicle.rearRightWindow = obj["rearRightWindow"]
+						Vehicle.rearLeftWindow = obj["rearLeftWindow"]
+						Vehicle.chargePower = obj["chargePower"] + " kWh"
+						Vehicle.chargingState = obj["chargingState"]
+						Vehicle.chargePower = obj["chargePower"] + " kWh"
+						Vehicle.remainingTime = obj["remainingChargingTime"]
+						Vehicle.remainingKm = obj["remainingKm"] + " km"
+						Vehicle.targetSoC = obj["targetSoC"] + " %"
+						Vehicle.chargekmph = obj["kmph"]
+						Vehicle.leftLight = obj["leftLight"]
+						Vehicle.rightLight = obj["rightLight"]
+						Vehicle.odometer = obj["odometer"] + " km"
+						Vehicle.electricRange = obj["electricRange"] + " km"
+						Vehicle.gasolineRange = obj["gasolineRange"] + " km"
+						if (obj["climatisation"] === "off") {
+							Vehicle.climatisation = obj["climatisation"]
+						} else {
+							Vehicle.climatisation = obj["temperature"] + " °C"
+						}
+						Vehicle.timestamp = obj["timestamp"]
+						Vehicle.latitude = obj["latitude"]
+						Vehicle.longitude = obj["longitude"]
+						
+						Vehicle.position = ""
+						for (i = 0; i < this.config.positions.length; i++) {
+							distance = Math.acos(Math.sin((this.config.positions[i][1]) * Math.PI / 180) * Math.sin(Vehicle.latitude * Math.PI / 180) + Math.cos((this.config.positions[i][1]) * Math.PI / 180) * Math.cos(Vehicle.latitude * Math.PI / 180) * Math.cos(((this.config.positions[i][2]) * Math.PI / 180) - (Vehicle.longitude * Math.PI / 180))) * 6371000
+							if (distance <= this.config.positions[i][3]) {
+								Vehicle.position = this.config.positions[i][0]
+							}
+						}
+						if (Vehicle.position === "") {
+							Vehicle.position = obj["position"]
+						}
+						Vehicle.status = obj["status"]
+						/* if quicker end of go away */
+					} else {
+						// if quicker path, already set
+						Vehicle.status = obj["status"]
+						// if quicker , translate and replace
+						Vehicle.error = this.translate(obj["error"])
 					}
+					self.updateDom();
 				}
-				if (Vehicle.position === ""){
-					Vehicle.position = obj["position"]
-     			}
-				Vehicle.status = obj["status"]
-			} else {
-				Vehicle.status = obj["status"]
-				Vehicle.error = this.translate(obj["error"])
-			}
-			self.updateDom();
 		} else {
 			Log.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
 		}
