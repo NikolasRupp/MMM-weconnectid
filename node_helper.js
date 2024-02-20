@@ -17,8 +17,8 @@ module.exports = NodeHelper.create({
 
     // If notification of the main.js file is received, the node_helper will do this here:
     socketNotificationReceived(notification, payload) {
-        if (notification === "DO_PYTHON") {
-            //payload.config = payload
+		if (notification === "DO_PYTHON") {
+			// call the request handler, pass with payload
             this.api(payload);
         } else {
             console.log(this.name + " received a socket notification: " + notification + " - Payload: " + payload);
@@ -26,7 +26,7 @@ module.exports = NodeHelper.create({
     },
 
 	api(payload) {
-	    var self = this;
+	    //var self = this;
 		let hand
 		hand = exec(payload.config.python + " --version");
 		hand.stdout.on('data', (data) => {
