@@ -216,8 +216,8 @@ Module.register("MMM-weconnectid", {
 				// if this response is because of this modules request
 				if (payload.id === this.identifier) {
 					Log.log(notification);
-					payload = payload.replace(/'/g, '"');
-					const obj = JSON.parse(payload)
+					payload.data = payload.data.replace(/'/g, '"');
+					const obj = JSON.parse(payload.data)
 					//  Vehicle = obj  // quicker 
 					if (obj["status"] === 1) {
 						/* you could do this a quicker way, less code, most already set. += on string is append ) */
