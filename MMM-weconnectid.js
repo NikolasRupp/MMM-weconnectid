@@ -1,4 +1,4 @@
-const Vehicle = {
+/*const Vehicle = {
 	bonnetDoor: "closed",
 	trunkDoor: "closed",
 	frontLeftDoor: "closed",
@@ -29,7 +29,7 @@ const Vehicle = {
 	position: "",
 	status: -1,
 	error: "",
-}
+} */
 
 
 Module.register("MMM-weconnectid", {
@@ -51,6 +51,38 @@ Module.register("MMM-weconnectid", {
     	timestamp: true,
     	googleAPI: "",
     	positions: []
+	},
+	Vehicle : {
+		bonnetDoor: "closed",
+		trunkDoor: "closed",
+		frontLeftDoor: "closed",
+		frontRightDoor: "closed",
+		rearRightDoor: "closed",
+		rearLeftDoor: "closed",
+		overallStatus: "safe",
+		frontLeftWindow: "closed",
+		frontRightWindow: "closed",
+		rearRightWindow: "closed",
+		rearLeftWindow: "closed",
+		chargePower: "0 kWh",
+		chargingState: "",
+		remainingSoC: "0 %",
+		remainingKm: "0",
+		remainingTime: "00:00",
+		chargekmph: 0,
+		targetSoC: "0 %",
+		leftLight: "off",
+		rightLight: "off",
+		odometer: "0 km",
+		electricRange: "0 km",
+		gasolineRange: "0 km",
+		climatisation: "off",
+		timestamp: "",
+		latitude: 0,
+		longitude: 0,
+		position: "",
+		status: -1,
+		error: "",
 	},
 
 	getStyles: function() {
@@ -80,7 +112,7 @@ Module.register("MMM-weconnectid", {
 		td.style.position = "relative"
     	tr.appendChild(td);
 
-		if (Vehicle.status == 1 || (Vehicle.status == 0 && Vehicle.odometer != 0)) {
+		if (this.Vehicle.status == 1 || (this.Vehicle.status == 0 && this.Vehicle.odometer != 0)) {
     		var img = document.createElement("img");
 			img.src = 'modules/MMM-weconnectid/Pictures/car.png';
 			img.style.maxWidth = "50%";
@@ -95,12 +127,12 @@ Module.register("MMM-weconnectid", {
 			td.appendChild(img);
 
 			var text = document.createElement("p");
-			if (Vehicle.overallStatus === "safe"){
+			if (this.Vehicle.overallStatus === "safe"){
     			text.innerHTML = '<i class="fa-solid fa-lock" style="color:#84dd63">'
     		} else {
     			text.innerHTML = '<i class="fa-solid fa-lock-open" style="color:#ee6352">'
     		}
-    		if (Vehicle.chargingState === "readyForCharging" || Vehicle.chargingState === "charging"){
+    		if (this.Vehicle.chargingState === "readyForCharging" || this.Vehicle.chargingState === "charging"){
     			text.innerHTML = text.innerHTML + ' <i class="fa-solid fa-bolt" style="color:#84dd63">'
     		}
     		text.id = "lock"
@@ -110,16 +142,16 @@ Module.register("MMM-weconnectid", {
     		wrapper.appendChild(tr);
     		var td = document.createElement("td");
 			tr.appendChild(td);
-			if (Vehicle.chargingState === "charging"){
+			if (this.Vehicle.chargingState === "charging"){
 				var div = document.createElement("div");
 				div.classList.add("progress2");
-				div.style.background = "linear-gradient(to right,white "+ Vehicle.targetSoC.replace(/\D/g, '') + "%,transparent "+ Vehicle.targetSoC.replace(/\D/g, '') + "%,transparent)"
+				div.style.background = "linear-gradient(to right,white "+ this.Vehicle.targetSoC.replace(/\D/g, '') + "%,transparent "+ this.Vehicle.targetSoC.replace(/\D/g, '') + "%,transparent)"
 				td.appendChild(div);
 				var div2 = document.createElement("div");
 				div2.classList.add("progress-bar2-charging");
-				div2.style.animation = "progress "+ (1000+(4000*Vehicle.remainingSoC.replace(/\D/g, '')/100)) + "ms infinite linear";
-				div2.style.setProperty('--my-middle-width', (Vehicle.remainingSoC.replace(/\D/g, '')/2) + "%" );
-				div2.style.setProperty('--my-end-width', Vehicle.remainingSoC.replace(/\D/g, '') + "%" );
+				div2.style.animation = "progress "+ (1000+(4000*this.Vehicle.remainingSoC.replace(/\D/g, '')/100)) + "ms infinite linear";
+				div2.style.setProperty('--my-middle-width', (this.Vehicle.remainingSoC.replace(/\D/g, '')/2) + "%" );
+				div2.style.setProperty('--my-end-width', this.Vehicle.remainingSoC.replace(/\D/g, '') + "%" );
 				div.appendChild(div2);
 			} else {
 				var div = document.createElement("div");
@@ -132,7 +164,7 @@ Module.register("MMM-weconnectid", {
 				td.appendChild(div);
 				var div2 = document.createElement("div");
 				div2.classList.add("progress-bar2");
-				div2.style.width = (100 - Vehicle.remainingSoC.replace(/\D/g, ''))+ "%"
+				div2.style.width = (100 - this.Vehicle.remainingSoC.replace(/\D/g, ''))+ "%"
 				div.appendChild(div2);
 			}
 
@@ -144,7 +176,7 @@ Module.register("MMM-weconnectid", {
 			var counter = 0
 			var fieldJSON = JSON.parse(this.config.fields)
 			for (const x in fieldJSON) {
-				if ((Vehicle.chargingState === "charging" && this.config.fields_charging.includes(x)) || !this.config.fields_charging.includes(x)) {
+				if ((this.Vehicle.chargingState === "charging" && this.config.fields_charging.includes(x)) || !this.config.fields_charging.includes(x)) {
 					if (counter === 0){
 						var tr_header = document.createElement("tr");
     					table.appendChild(tr_header);
@@ -179,7 +211,7 @@ Module.register("MMM-weconnectid", {
 			}
 		}
 
-		if (this.config.timestamp === true || Vehicle.status === 0 || Vehicle.status === -1){
+		if (this.config.timestamp === true || this.Vehicle.status === 0 || this.Vehicle.status === -1){
 			var tr = document.createElement("tr");
     		wrapper.appendChild(tr);
     		var td = document.createElement("td");
@@ -187,12 +219,12 @@ Module.register("MMM-weconnectid", {
     		tr.appendChild(td);
 
 			var text = document.createElement("p");
-			if (Vehicle.status === -1){
+			if (this.Vehicle.status === -1){
     			text.innerHTML = this.translate("LOADING");
-    		} else if (Vehicle.status === 1){
-    			text.innerHTML = Vehicle.timestamp;
+    		} else if (this.Vehicle.status === 1){
+    			text.innerHTML = this.Vehicle.timestamp;
     		} else {
-    			text.innerHTML = Vehicle.error;
+    			text.innerHTML = this.Vehicle.error;
     		}
     		text.id = "status";
     		td.appendChild(text);
@@ -218,27 +250,27 @@ Module.register("MMM-weconnectid", {
 					Log.log(notification);
 					payload.data = payload.data.replace(/'/g, '"');
 					const obj = JSON.parse(payload.data)
-					//  Vehicle = obj  // quicker 
+					//  this.Vehicle = obj  // quicker 
 					if (obj["status"] === 1) {
 						/* you could do this a quicker way, less code, most already set. += on string is append ) */
 						/*
-						Vehicle.chargePower  += " kWh"
-						Vehicle.chargePower  += " kWh"
-						Vehicle.remainingKm  += " km"
-						Vehicle.targetSoC    += " %"
-						Vehicle.odometer     += " km"
-						Vehicle.electricRange  += " km"
-						Vehicle.gasolineRange  += " km"
+						this.Vehicle.chargePower  += " kWh"
+						this.Vehicle.chargePower  += " kWh"
+						this.Vehicle.remainingKm  += " km"
+						this.Vehicle.targetSoC    += " %"
+						this.Vehicle.odometer     += " km"
+						this.Vehicle.electricRange  += " km"
+						this.Vehicle.gasolineRange  += " km"
 						// if climatisation has a value
-						if (Vehicle.climatisation !== "off") {
+						if (this.Vehicle.climatisation !== "off") {
 							// append temp
-							Vehicle.climatisation  += " °C"
+							this.Vehicle.climatisation  += " °C"
 
 						// save current value
-						let tempPosition = Vehicle.position
+						let tempPosition = this.Vehicle.position
 						// recalc is possible
 							for (i = 0; i < this.config.positions.length; i++) {
-								distance = Math.acos(Math.sin((this.config.positions[i][1]) * Math.PI / 180) * Math.sin(Vehicle.latitude * Math.PI / 180) + Math.cos((this.config.positions[i][1]) * Math.PI / 180) * Math.cos(Vehicle.latitude * Math.PI / 180) * Math.cos(((this.config.positions[i][2]) * Math.PI / 180) - (Vehicle.longitude * Math.PI / 180))) * 6371000
+								distance = Math.acos(Math.sin((this.config.positions[i][1]) * Math.PI / 180) * Math.sin(this.Vehicle.latitude * Math.PI / 180) + Math.cos((this.config.positions[i][1]) * Math.PI / 180) * Math.cos(this.Vehicle.latitude * Math.PI / 180) * Math.cos(((this.config.positions[i][2]) * Math.PI / 180) - (this.Vehicle.longitude * Math.PI / 180))) * 6371000
 								if (distance <= this.config.positions[i][3]) {
 									tempPosition = this.config.positions[i][0]
 								}
@@ -246,59 +278,59 @@ Module.register("MMM-weconnectid", {
 						// if recalculated or original is set							
 						if (tempPosition !== "") {
 							// use it
-							Vehicle.position = temPosition
+							this.Vehicle.position = temPosition
 						}
 						*/
 						/* if quicker all of this qould go away */
-						Vehicle.bonnetDoor = obj["bonnetDoor"]
-						Vehicle.trunkDoor = obj["trunkDoor"]
-						Vehicle.frontLeftDoor = obj["frontLeftDoor"]
-						Vehicle.frontRightDoor = obj["frontRightDoor"]
-						Vehicle.rearRightDoor = obj["rearRightDoor"]
-						Vehicle.rearLeftDoor = obj["rearLeftDoor"]
-						Vehicle.overallStatus = obj["overallStatus"]
-						Vehicle.frontLeftWindow = obj["frontLeftWindow"]
-						Vehicle.frontRightWindow = obj["frontRightWindow"]
-						Vehicle.rearRightWindow = obj["rearRightWindow"]
-						Vehicle.rearLeftWindow = obj["rearLeftWindow"]
-						Vehicle.chargePower = obj["chargePower"] + " kWh"
-						Vehicle.chargingState = obj["chargingState"]
-						Vehicle.chargePower = obj["chargePower"] + " kWh"
-						Vehicle.remainingTime = obj["remainingChargingTime"]
-						Vehicle.remainingKm = obj["remainingKm"] + " km"
-						Vehicle.targetSoC = obj["targetSoC"] + " %"
-						Vehicle.chargekmph = obj["kmph"]
-						Vehicle.leftLight = obj["leftLight"]
-						Vehicle.rightLight = obj["rightLight"]
-						Vehicle.odometer = obj["odometer"] + " km"
-						Vehicle.electricRange = obj["electricRange"] + " km"
-						Vehicle.gasolineRange = obj["gasolineRange"] + " km"
+						this.Vehicle.bonnetDoor = obj["bonnetDoor"]
+						this.Vehicle.trunkDoor = obj["trunkDoor"]
+						this.Vehicle.frontLeftDoor = obj["frontLeftDoor"]
+						this.Vehicle.frontRightDoor = obj["frontRightDoor"]
+						this.Vehicle.rearRightDoor = obj["rearRightDoor"]
+						this.Vehicle.rearLeftDoor = obj["rearLeftDoor"]
+						this.Vehicle.overallStatus = obj["overallStatus"]
+						this.Vehicle.frontLeftWindow = obj["frontLeftWindow"]
+						this.Vehicle.frontRightWindow = obj["frontRightWindow"]
+						this.Vehicle.rearRightWindow = obj["rearRightWindow"]
+						this.Vehicle.rearLeftWindow = obj["rearLeftWindow"]
+						this.Vehicle.chargePower = obj["chargePower"] + " kWh"
+						this.Vehicle.chargingState = obj["chargingState"]
+						this.Vehicle.chargePower = obj["chargePower"] + " kWh"
+						this.Vehicle.remainingTime = obj["remainingChargingTime"]
+						this.Vehicle.remainingKm = obj["remainingKm"] + " km"
+						this.Vehicle.targetSoC = obj["targetSoC"] + " %"
+						this.Vehicle.chargekmph = obj["kmph"]
+						this.Vehicle.leftLight = obj["leftLight"]
+						this.Vehicle.rightLight = obj["rightLight"]
+						this.Vehicle.odometer = obj["odometer"] + " km"
+						this.Vehicle.electricRange = obj["electricRange"] + " km"
+						this.Vehicle.gasolineRange = obj["gasolineRange"] + " km"
 						if (obj["climatisation"] === "off") {
-							Vehicle.climatisation = obj["climatisation"]
+							this.Vehicle.climatisation = obj["climatisation"]
 						} else {
-							Vehicle.climatisation = obj["temperature"] + " °C"
+							this.Vehicle.climatisation = obj["temperature"] + " °C"
 						}
-						Vehicle.timestamp = obj["timestamp"]
-						Vehicle.latitude = obj["latitude"]
-						Vehicle.longitude = obj["longitude"]
+						this.Vehicle.timestamp = obj["timestamp"]
+						this.Vehicle.latitude = obj["latitude"]
+						this.Vehicle.longitude = obj["longitude"]
 						
-						Vehicle.position = ""
+						this.Vehicle.position = ""
 						for (i = 0; i < this.config.positions.length; i++) {
-							distance = Math.acos(Math.sin((this.config.positions[i][1]) * Math.PI / 180) * Math.sin(Vehicle.latitude * Math.PI / 180) + Math.cos((this.config.positions[i][1]) * Math.PI / 180) * Math.cos(Vehicle.latitude * Math.PI / 180) * Math.cos(((this.config.positions[i][2]) * Math.PI / 180) - (Vehicle.longitude * Math.PI / 180))) * 6371000
+							distance = Math.acos(Math.sin((this.config.positions[i][1]) * Math.PI / 180) * Math.sin(this.Vehicle.latitude * Math.PI / 180) + Math.cos((this.config.positions[i][1]) * Math.PI / 180) * Math.cos(this.Vehicle.latitude * Math.PI / 180) * Math.cos(((this.config.positions[i][2]) * Math.PI / 180) - (this.Vehicle.longitude * Math.PI / 180))) * 6371000
 							if (distance <= this.config.positions[i][3]) {
-								Vehicle.position = this.config.positions[i][0]
+								this.Vehicle.position = this.config.positions[i][0]
 							}
 						}
-						if (Vehicle.position === "") {
-							Vehicle.position = obj["position"]
+						if (this.Vehicle.position === "") {
+							this.Vehicle.position = obj["position"]
 						}
-						Vehicle.status = obj["status"]
+						this.Vehicle.status = obj["status"]
 						/* if quicker end of go away */
 					} else {
 						// if quicker path, already set
-						Vehicle.status = obj["status"]
+						this.Vehicle.status = obj["status"]
 						// if quicker , translate and replace
-						Vehicle.error = this.translate(obj["error"])
+						this.Vehicle.error = this.translate(obj["error"])
 					}
 					self.updateDom();
 				}
