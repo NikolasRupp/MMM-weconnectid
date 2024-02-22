@@ -174,7 +174,7 @@ Module.register("MMM-weconnectid", {
     		tr.append(table)
 
 			var counter = 0
-			var fieldJSON = JSON.parse(this.config.fields)
+			var fieldJSON = (typeof this.config.fields === 'string')?JSON.parse(this.config.fields):this.config.fields
 			for (const x in fieldJSON) {
 				if ((this.Vehicle.chargingState === "charging" && this.config.fields_charging.includes(x)) || !this.config.fields_charging.includes(x)) {
 					if (counter === 0){
@@ -197,7 +197,7 @@ Module.register("MMM-weconnectid", {
     				td.id = "text-table"
     				td.style.width = (100/this.config.number) + "%";
     				var text = document.createElement("p");
-    				text.innerHTML = this.translate(Vehicle[fieldJSON[x]]);
+    				text.innerHTML = this.translate(this.Vehicle[fieldJSON[x]]);
     				text.id = "info";
     				td.appendChild(text);
 					tr_text.appendChild(td);
