@@ -1,35 +1,4 @@
-/*const Vehicle = {
-	bonnetDoor: "closed",
-	trunkDoor: "closed",
-	frontLeftDoor: "closed",
-	frontRightDoor: "closed",
-	rearRightDoor: "closed",
-	rearLeftDoor: "closed",
-	overallStatus: "safe",
-	frontLeftWindow: "closed",
-	frontRightWindow: "closed",
-	rearRightWindow: "closed",
-	rearLeftWindow: "closed",
-	chargePower: "0 kWh",
-	chargingState: "",
-	remainingSoC: "0 %",
-	remainingKm: "0",
-	remainingTime: "00:00",
-	chargekmph: 0,
-	targetSoC: "0 %",
-	leftLight: "off",
-	rightLight: "off",
-	odometer: "0 km",
-        electricRange: "0 km",
-        gasolineRange: "0 km",
-	climatisation: "off",
-	timestamp: "",
-	latitude: 0,
-	longitude: 0,
-	position: "",
-	status: -1,
-	error: "",
-} */
+
 
 
 Module.register("MMM-weconnectid", {
@@ -114,13 +83,13 @@ Module.register("MMM-weconnectid", {
 
 		if (this.Vehicle.status == 1 || (this.Vehicle.status == 0 && this.Vehicle.odometer != 0)) {
     		var img = document.createElement("img");
-			img.src = 'modules/MMM-weconnectid/Pictures/car.png';
+			img.src = 'modules/MMM-weconnectid/Pictures/' + this.identifier + '/car.png';
 			img.style.maxWidth = "50%";
 			img.style.maxHeight = this.config.maxHeight;
 			img.id = "picture0";
 			td.appendChild(img);
 			var img = document.createElement("img");
-			img.src = 'modules/MMM-weconnectid/Pictures/status.png';
+			img.src = 'modules/MMM-weconnectid/Pictures/' + this.identifier +'/status.png';
 			img.style.maxWidth = "50%";
 			img.style.maxHeight = this.config.maxHeight;
 			img.id = "picture0";
@@ -298,6 +267,7 @@ Module.register("MMM-weconnectid", {
 						this.Vehicle.chargePower = obj["chargePower"] + " kWh"
 						this.Vehicle.remainingTime = obj["remainingChargingTime"]
 						this.Vehicle.remainingKm = obj["remainingKm"] + " km"
+						this.Vehicle.remainingSoC = obj["remainingSoC"] + ' '
 						this.Vehicle.targetSoC = obj["targetSoC"] + " %"
 						this.Vehicle.chargekmph = obj["kmph"]
 						this.Vehicle.leftLight = obj["leftLight"]
