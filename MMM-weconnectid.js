@@ -267,7 +267,7 @@ Module.register("MMM-weconnectid", {
 						this.Vehicle.chargePower = obj["chargePower"] + " kWh"
 						this.Vehicle.remainingTime = obj["remainingChargingTime"]
 						this.Vehicle.remainingKm = obj["remainingKm"] + " km"
-						this.Vehicle.remainingSoC = obj["remainingSoC"] + ' '
+						this.Vehicle.remainingSoC = obj["remainingSoC"] + " %"
 						this.Vehicle.targetSoC = obj["targetSoC"] + " %"
 						this.Vehicle.chargekmph = obj["kmph"]
 						this.Vehicle.leftLight = obj["leftLight"]
