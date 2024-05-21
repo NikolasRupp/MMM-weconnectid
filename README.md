@@ -156,13 +156,13 @@ The following Attributes are available:
 |remainingSoC|Remaining SoC in %|
 |remainingTime|Remaining Charging Time in h:mm|
 |remainingKm|Remaining km|
+|electricRange|Range of the vehicle in electric mode (for PHEV vehicles)|
+|gasolineRange|Range of the vehicle in gasoline mode (for PHEV and non-electic vehicles)|
 |targetSoC|Target SoC in %|
 |chargekmph|Charging ... km/h|
 |leftLight|Status of left Light|
 |rightLight|Status of Right Light|
 |odometer|Odometer in km|
-|electricRange|Range of the vehicle in electric mode (for PHEV vehicles)|
-|gasolineRange|Range of the vehicle in gasoline mode (for PHEV vehicles)|
 |climatisation|Status of Climatisation (Will show the selected Temperature in °C if On)|
 |latitude|Latitude of the Car if parked|
 |longitude|Longitude of the Car if parked|
