@@ -145,6 +145,11 @@ try:
           output["latitude"] = latitude
           output["longitude"] = longitude
           output["position"] = position
+          output["odometer_miles"] = f'{int(float(output.get("odometer", "0").replace(".","")) * 0.6214):,}'.replace(",",".")
+          output["miph"] = int(float(output.get("kmph", 0)) * 0.6214)
+          output["electricRange_miles"] = int(float(output.get("electricRange", 0)) * 0.6214)
+          output["gasolineRange_miles"] = int(float(output.get("gasolineRange", 0)) * 0.6214)
+          output["remainingMiles"] = int(float(output.get("remainingKm", 0)) * 0.6214)
           output["status"] = 1
           output["error"] = ""
           print(output)

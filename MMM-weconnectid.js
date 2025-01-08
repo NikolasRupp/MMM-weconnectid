@@ -37,14 +37,19 @@ Module.register("MMM-weconnectid", {
 		chargingState: "",
 		remainingSoC: "0 %",
 		remainingKm: "0",
+		remainingMiles: "0",
 		remainingTime: "00:00",
 		chargekmph: 0,
+		chargemph: 0,
 		targetSoC: "0 %",
 		leftLight: "off",
 		rightLight: "off",
 		odometer: "0 km",
+		odometer_miles: "0 mi",
 		electricRange: "0 km",
+		electricRange_miles: "0 mi",
 		gasolineRange: "0 km",
+		gasolineRange_miles: "0 mi",
 		climatisation: "off",
 		timestamp: "",
 		latitude: 0,
@@ -267,14 +272,19 @@ Module.register("MMM-weconnectid", {
 						this.Vehicle.chargePower = obj["chargePower"] + " kWh"
 						this.Vehicle.remainingTime = obj["remainingChargingTime"]
 						this.Vehicle.remainingKm = obj["remainingKm"] + " km"
+						this.Vehicle.remainingMiles = obj["remainingMiles"] + " mi"
 						this.Vehicle.remainingSoC = obj["remainingSoC"] + " %"
 						this.Vehicle.targetSoC = obj["targetSoC"] + " %"
 						this.Vehicle.chargekmph = obj["kmph"]
+						this.Vehicle.chargemiph = obj["miph"]
 						this.Vehicle.leftLight = obj["leftLight"]
 						this.Vehicle.rightLight = obj["rightLight"]
 						this.Vehicle.odometer = obj["odometer"] + " km"
+						this.Vehicle.odometer_miles = obj["odometer_miles"] + " mi"
 						this.Vehicle.electricRange = obj["electricRange"] + " km"
+						this.Vehicle.electricRange_miles = obj["electricRange_miles"] + " mi"
 						this.Vehicle.gasolineRange = obj["gasolineRange"] + " km"
+						this.Vehicle.gasolineRange_miles = obj["gasolineRange_miles"] + " mi"
 						if (obj["climatisation"] === "off") {
 							this.Vehicle.climatisation = obj["climatisation"]
 						} else {

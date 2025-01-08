@@ -9,6 +9,7 @@
 	"off": "Eteint",
 	"on": "Allumé",
 	"KMPH": "Chargement km/h",
+	"MIPH": "Chargement mi/h",
 	"POSITION": "Localisation",
 	"UNKNOWN": "Inconnue",
 	"DRIVING": "En route"

@@ -138,35 +138,40 @@ The key will be used as the Header in the Table. You can Name that whatever you 
 
 The following Attributes are available:
 
-|Value|Description|
-|---|---|
-|bonnetDoor|Status of the Bonnet Door (Will also be shown in the Image, so not really necessary)|
-|trunkDoor|Status of the Trunk Door (Will also be shown in the Image, so not really necessary)|
-|frontLeftDoor|Status of the Front Left Door (Will also be shown in the Image, so not really necessary)|
-|frontRightDoor|Status of the Front Right Door (Will also be shown in the Image, so not really necessary)|
-|rearLeftDoor|Status of the Rear Left Door (Will also be shown in the Image, so not really necessary)|
-|rearRightDoor|Status of the Rear Right Door (Will also be shown in the Image, so not really necessary)|
-|overallStatus|If the Vehicle is locked (Will also be shown in the Image, so not really necessary)|
-|frontLeftWindow|Status of the Front Left Window (Will also be shown in the Image, so not really necessary)|
-|frontRightWindow|Status of the Front Right Window (Will also be shown in the Image, so not really necessary)|
-|rearLeftWindow|Status of the Rear Left Window (Will also be shown in the Image, so not really necessary)|
-|rearLRightWindow|Status of the Rear Right Window (Will also be shown in the Image, so not really necessary)|
-|chargePower|Current Charging Power in kWh|
-|chargingState|Current Charging State|
-|remainingSoC|Remaining SoC in %|
-|remainingTime|Remaining Charging Time in h:mm|
-|remainingKm|Remaining km|
-|electricRange|Range of the vehicle in electric mode (for PHEV vehicles)|
-|gasolineRange|Range of the vehicle in gasoline mode (for PHEV and non-electic vehicles)|
-|targetSoC|Target SoC in %|
-|chargekmph|Charging ... km/h|
-|leftLight|Status of left Light|
-|rightLight|Status of Right Light|
-|odometer|Odometer in km|
-|climatisation|Status of Climatisation (Will show the selected Temperature in °C if On)|
-|latitude|Latitude of the Car if parked|
-|longitude|Longitude of the Car if parked|
-|position|Position of the Car if parked|
+| Value               | Description                                                                                 |
+|---------------------|---------------------------------------------------------------------------------------------|
+| bonnetDoor          | Status of the Bonnet Door (Will also be shown in the Image, so not really necessary)        |
+| trunkDoor           | Status of the Trunk Door (Will also be shown in the Image, so not really necessary)         |
+| frontLeftDoor       | Status of the Front Left Door (Will also be shown in the Image, so not really necessary)    |
+| frontRightDoor      | Status of the Front Right Door (Will also be shown in the Image, so not really necessary)   |
+| rearLeftDoor        | Status of the Rear Left Door (Will also be shown in the Image, so not really necessary)     |
+| rearRightDoor       | Status of the Rear Right Door (Will also be shown in the Image, so not really necessary)    |
+| overallStatus       | If the Vehicle is locked (Will also be shown in the Image, so not really necessary)         |
+| frontLeftWindow     | Status of the Front Left Window (Will also be shown in the Image, so not really necessary)  |
+| frontRightWindow    | Status of the Front Right Window (Will also be shown in the Image, so not really necessary) |
+| rearLeftWindow      | Status of the Rear Left Window (Will also be shown in the Image, so not really necessary)   |
+| rearLRightWindow    | Status of the Rear Right Window (Will also be shown in the Image, so not really necessary)  |
+| chargePower         | Current Charging Power in kWh                                                               |
+| chargingState       | Current Charging State                                                                      |
+| remainingSoC        | Remaining SoC in %                                                                          |
+| remainingTime       | Remaining Charging Time in h:mm                                                             |
+| remainingKm         | Remaining km                                                                                |
+| remainingMiles      | Remaining Miles                                                                             |
+| electricRange       | Range of the vehicle in electric mode (for PHEV vehicles)                                   |
+| electricRange_miles | Range of the vehicle in electric mode in miles (for PHEV vehicles)                          |
+| gasolineRange       | Range of the vehicle in gasoline mode (for PHEV and non-electic vehicles)                   |
+| gasolineRange_miles | Range of the vehicle in gasoline mode in miles (for PHEV and non-electic vehicles)          |
+| targetSoC           | Target SoC in %                                                                             |
+| chargekmph          | Charging ... km/h                                                                           |
+| chargemph           | Charging ... mi/h                                                                           |
+| leftLight           | Status of left Light                                                                        |
+| rightLight          | Status of Right Light                                                                       |
+| odometer            | Odometer in km                                                                              |
+| odometer_miles      | Odometer in miles                                                                           |
+| climatisation       | Status of Climatisation (Will show the selected Temperature in °C if On)                    |
+| latitude            | Latitude of the Car if parked                                                               |
+| longitude           | Longitude of the Car if parked                                                              |
+| position            | Position of the Car if parked                                                               |
 
 If you want, that some Values like the remaining charging time will only be displayed during charging you can add the header to the list of the fields_charging Parameter.
 
@@ -190,12 +195,12 @@ You can define Positions where your car is parked often. You can Enter as many l
 
 Each Position has to have the following Parameter:
 
-|Paramter|Description|Type|
-|---|---|---|
-|Name|Name of the description that should be shown|Text|
-|Latitude|Latitude of the Postion|Number|
-|Longitude|Longitude of the Position|Number|
-|Radius|Radius around the Coordinates|Number|
+|Paramter| Description                                  |Type|
+|---|----------------------------------------------|---|
+|Name| Name of the description that should be shown |Text|
+|Latitude| Latitude of the Postion                      |Number|
+|Longitude| Longitude of the Position                    |Number|
+|Radius| Radius around the Coordinates in meter       |Number|
 
 An Example would be
 
