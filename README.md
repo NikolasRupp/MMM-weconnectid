@@ -163,7 +163,7 @@ The following Attributes are available:
 | gasolineRange_miles | Range of the vehicle in gasoline mode in miles (for PHEV and non-electic vehicles)          |
 | targetSoC           | Target SoC in %                                                                             |
 | chargekmph          | Charging ... km/h                                                                           |
-| chargemph           | Charging ... mi/h                                                                           |
+| chargemiph           | Charging ... mi/h                                                                           |
 | leftLight           | Status of left Light                                                                        |
 | rightLight          | Status of Right Light                                                                       |
 | odometer            | Odometer in km                                                                              |
