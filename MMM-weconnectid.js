@@ -133,7 +133,7 @@ Module.register("MMM-weconnectid", {
 				if (this.config.barstyle === "fluent"){
 					div.style.background = "linear-gradient(to right,#ee6352 " + this.config.remainingSOCred + "%,#f5b700 " + this.config.remainingSOCyellow + "%,#84dd63 100%)"
 				} else {
-					div.style.background = "linear-gradient(to right,#ee6352 " + this.config.remainingSOCred + "%,#f5b700 " + this.config.remainingSOCred + "%,#f5b700 " + this.config.remainingSOCyellow + "%,#84dd63 " + this.config.remainingSOCyellow + "%,#84dd63 100%)"
+					div.style.background = "linear-gradient(to right,#ee6352 " + (this.config.remainingSOCred -5) + "%,#f5b700 " + (this.config.remainingSOCred +5) + "%,#f5b700 " + (this.config.remainingSOCyellow -5) + "%,#84dd63 " + (this.config.remainingSOCyellow +5) + "%,#84dd63 100%)"
 				}
 				td.appendChild(div);
 				var div2 = document.createElement("div");
