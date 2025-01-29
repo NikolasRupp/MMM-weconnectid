@@ -183,7 +183,7 @@ Unfortunately you need a Credit Card, even though you don't have to pay anything
 
 If you have logged in you can create an Project and call it whatever you like. In that Project you have to activate the Geocoding API and copy the API Key in the config file.
 
-There is a Price for the API but you get 200$ every moth for free what are about 40.000 API requests, which are about 1 every Minute, which should be enough. You can read more about it [here](https://mapsplatform.google.com/intl/de/pricing/).
+You get 10.000 free API requests, which are one request per 5 Minutes, which should be enough. You can read more about it [here](https://mapsplatform.google.com/intl/de/pricing/).
 
 If you don't enter an API key the Location, if not defined in [Positions](#positions) will be shown as __unkown__.
 
