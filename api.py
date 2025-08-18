@@ -1,12 +1,13 @@
 try:
-  from PIL import Image
-  from weconnect import weconnect, addressable
+  from carconnectivity import carconnectivity
   import json
   from sys import argv
   import requests
   from datetime import datetime, timezone
   import time
   import os
+  import argparse
+  import tempfile
 except ModuleNotFoundError as e:
   output = {
     "status": 0,
@@ -15,26 +16,70 @@ except ModuleNotFoundError as e:
   print(output)
   exit()
 
-def saveElement(element, flags):
-    """Simple callback for saving the pictures
-    Args:
-        element (AddressableObject): Object for which an event occured
-        flags (AddressableLeaf.ObserverEvent): Information about the type of the event
-    """
-    del flags
-    if isinstance(element, addressable.AddressableAttribute) and element.valueType == Image.Image:
-        if element.localAddress == "car" or element.localAddress == "status":
-          if os.path.exists(f'{argv[4]}/{element.localAddress}.png'):
-            os.remove(f'{argv[4]}/{element.localAddress}.png')
-          element.saveToFile(f'{argv[4]}/{element.localAddress}.png')
+def extract_upd(data, ref_ts):
+  candidates = []
+
+  def walk(x):
+    if isinstance(x, dict):
+      for k, v in x.items():
+        if k == "upd":
+          try:
+            dt = datetime.strptime(v,'%Y-%m-%dT%H:%M:%S.%f+00:00').replace(tzinfo=timezone.utc)
+            candidates.append(dt.timestamp())
+          except Exception:
+            pass
+        else:
+          walk(v)
+    elif isinstance(x, list):
+      for item in x:
+        walk(item)
+
+  walk(data)
+
+  # nur Werte <= ref_ts
+  past = [ts for ts in candidates if ts <= ref_ts]
+  if not past:
+    return None
+  return max(past)
 
 found_vin = ""
 timestamp = 0
 try:
-  weConnect = weconnect.WeConnect(username=argv[1], password=argv[2], updateAfterLogin=False, loginOnInit=False)
-  weConnect.login()
-  weConnect.addObserver(saveElement, addressable.AddressableLeaf.ObserverEvent.VALUE_CHANGED)
-  weConnect.update()
+  config_dict = {
+    "carConnectivity": {
+        "connectors": [
+            {
+                "type": argv[5],
+                "config": {
+                    "username": argv[1],
+                    "password": argv[2]
+                }
+            }
+        ]
+    }
+  }
+  if argv[5] == "seatcupra":
+      config_dict["carConnectivity"]["connectors"][0]["config"]["brand"] = argv[6]
+  car_connectivity = carconnectivity.CarConnectivity(config=config_dict)
+  car_connectivity.fetch_all()
+  garage = car_connectivity.get_garage()
+  vehicle = None
+  if garage is not None:
+      vehicle = garage.get_vehicle(argv[3])
+      if vehicle is None:
+          output = {
+              "status": 0,
+              "error": f"Vehicle with VIN {argv[3]} not found",
+          }
+          print(output)
+          exit()
+      else:
+          for name, val in vehicle.images.as_dict().items():
+              if os.path.exists(f'{argv[4]}/{name}.png'):
+                  os.remove(f'{argv[4]}/{name}.png')
+              val["val"].save(f'{argv[4]}/{name}.png')
+          vehicle = json.loads(vehicle.as_json())
+  car_connectivity.shutdown()
 except Exception as e:
   output = {
     "status": 0,
@@ -44,124 +89,130 @@ except Exception as e:
   exit()
 
 try:
-  for vin, vehicles in weConnect.vehicles.items():
-      if vin == argv[3]:
-          # print(vehicles)
-          vehicle = json.loads(vehicles.toJSON())
-          # print(vehicle)
-          if vehicle["role"] != "PRIMARY_USER":
-            output = {
-              "status": 0,
-              "error": f"User must be Main User not {vehicle['role']}",
-            }
-            print(output)
-            exit()
-          if "domains" not in vehicle.keys():
-            output = {
-              "status": 0,
-              "error": "Connection not available. Try again later",
-            }
-            print(output)
-            exit()
-          for key1 in vehicle["domains"].keys():
-            for key2 in vehicle["domains"][key1].keys():
-              try:
-                if "carCapturedTimestamp" in vehicle["domains"][key1][key2].keys():
-                  temp_timestamp = datetime.timestamp(datetime.strptime(vehicle["domains"][key1][key2]["carCapturedTimestamp"],'%Y-%m-%dT%H:%M:%S+00:00'))
-                  if temp_timestamp > timestamp:
-                    timestamp = temp_timestamp
-              except Exception as e:
-                timestamp = "Not available"
-          if timestamp != 0 and timestamp != "Not available":
-            timestamp = datetime.fromtimestamp(timestamp).replace(tzinfo=timezone.utc).astimezone(tz=None).strftime("%d.%m.%Y %H:%M")
-          if "parking" in vehicle['domains']:
-            latitude = vehicle['domains']['parking']['parkingPosition']['latitude']
-            longitude = vehicle['domains']['parking']['parkingPosition']['longitude']
-            if len(argv) == 6:
-              r = requests.get(f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={argv[5]}")
-              if r.status_code not in range(200, 299):
-                position = "UNKNOWN"
-              else:
-                result = r.json()
-                if "error_message" in result.keys():
-                  output = {
-                    "status": 0,
-                    "error": result["error_message"],
-                  }
-                  print(output)
-                  exit()
-                else:
-                  result = r.json()
-                  if result["results"][0]["address_components"][0]["types"][0] == "premise":
-                    position = f'{result["results"][0]["address_components"][0]["long_name"]}, {result["results"][0]["address_components"][3]["long_name"]}'
-                  else:
-                    position = result["results"][0]["formatted_address"]
-            else:
-              position = "UNKNOWN"
+    now_timestamp = datetime.now(tz=timezone.utc).timestamp() - 60
+    if vehicle:
+      try:
+        timestamp = extract_upd(vehicle, now_timestamp)
+      except Exception as e:
+        timestamp = "Not available"
+      if timestamp != 0 and timestamp != "Not available":
+        timestamp = datetime.fromtimestamp(timestamp).replace(tzinfo=timezone.utc).astimezone(tz=None).strftime("%d.%m.%Y %H:%M")
+      if "position" in vehicle:
+        latitude = vehicle['position']['latitude']["val"]
+        longitude = vehicle['position']['longitude']["val"]
+        if len(argv) == 8:
+          r = requests.get(f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={argv[7]}")
+          if r.status_code not in range(200, 299):
+            position = "UNKNOWN"
           else:
-            latitude = 0
-            longitude = 0
-            position = "DRIVING"
-          fields = {"bonnetDoor":["domains","access","accessStatus","doors","bonnet","openState"],
-                    "trunkDoor":["domains","access","accessStatus","doors","trunk","openState"],
-                    "rearRightDoor":["domains","access","accessStatus","doors","rearRight","openState"],
-                    "rearLeftDoor":["domains","access","accessStatus","doors","rearLeft","openState"],
-                    "frontRightDoor":["domains","access","accessStatus","doors","frontRight","openState"],
-                    "frontLeftDoor":["domains","access","accessStatus","doors","frontLeft","openState"],
-                    "rearRightWindow":["domains","access","accessStatus","windows","rearRight","openState"],
-                    "rearLeftWindow":["domains","access","accessStatus","windows","rearLeft","openState"],
-                    "frontRightWindow":["domains","access","accessStatus","windows","frontRight","openState"],
-                    "frontLeftWindow":["domains","access","accessStatus","windows","frontLeft","openState"],
-                    "overallStatus": ["domains","access","accessStatus","overallStatus"],
-                    "rightLight": ["domains","vehicleLights","lightsStatus","lights","right","status"],
-                    "leftLight": ["domains","vehicleLights","lightsStatus","lights","left","status"],
-                    "remainingKm": ["domains","charging","batteryStatus","cruisingRangeElectric_km"],
-                    "remainingSoC": ["domains","charging","batteryStatus","currentSOC_pct"],
-                    "remainingChargingTime": ["domains", "charging", "chargingStatus", "remainingChargingTimeToComplete_min"],
-                    "chargingState": ["domains","charging","chargingStatus","chargingState"],
-                    "chargePower": ["domains","charging","chargingStatus","chargePower_kW"],
-                    "targetSoC": ["domains","charging","chargingSettings","targetSOC_pct"],
-                    "kmph": ["domains","charging","chargingStatus","chargeRate_kmph"],
-                    "odometer": ["domains", "measurements", "odometerStatus", "odometer"],
-                    "electricRange": ["domains", "measurements", "rangeStatus", "electricRange"],
-                    "gasolineRange": ["domains", "measurements", "rangeStatus", "gasolineRange"],
-                    "climatisation": ["domains","climatisation","climatisationStatus","climatisationState"],
-                    "temperature": ["domains","climatisation","climatisationSettings","targetTemperature_C"],
-                    "model": ["model"]
-                    }
-          output = {}
-          for key in fields.keys():
-            value = vehicle
-            for field in fields.get(key):
-              try:
-                value = value[field]
-              except:
-                value = 0
-                break
-            output[key] = value
-          output["timestamp"] = f'{timestamp} - ({datetime.now().strftime("%H:%M")})'
-          output["remainingChargingTime"] = time.strftime("%H:%M", time.gmtime(output.get("remainingChargingTime",0) * 60))
-          output["odometer"] = f'{output.get("odometer",0):,}'.replace(",", ".")
-          output["latitude"] = latitude
-          output["longitude"] = longitude
-          output["position"] = position
-          output["odometer_miles"] = f'{int(float(output.get("odometer", "0").replace(".","")) * 0.6214):,}'.replace(",",".")
-          output["miph"] = int(float(output.get("kmph", 0)) * 0.6214)
-          output["electricRange_miles"] = int(float(output.get("electricRange", 0)) * 0.6214)
-          output["gasolineRange_miles"] = int(float(output.get("gasolineRange", 0)) * 0.6214)
-          output["remainingMiles"] = int(float(output.get("remainingKm", 0)) * 0.6214)
-          output["status"] = 1
-          output["error"] = ""
-          print(output)
-          exit()
+            result = r.json()
+            if "error_message" in result.keys():
+              output = {
+                "status": 0,
+                "error": result["error_message"],
+              }
+              print(output)
+              exit()
+            else:
+              result = r.json()
+              if result["results"][0]["address_components"][0]["types"][0] == "premise":
+                position = f'{result["results"][0]["address_components"][0]["long_name"]}, {result["results"][0]["address_components"][3]["long_name"]}'
+              else:
+                position = result["results"][0]["formatted_address"]
+        else:
+          position = "UNKNOWN"
       else:
-        found_vin += f" {vin}"
-  output = {
-    "status": 0,
-    "error": f"Vin not found. Found:{found_vin}",
-  }
-  print(output)
-  exit()
+        latitude = 0
+        longitude = 0
+        position = "DRIVING"
+      fields = {"bonnetDoor":["domains","access","accessStatus","doors","bonnet","openState"],
+                "trunkDoor":["domains","access","accessStatus","doors","trunk","openState"],
+                "rearRightDoor":["domains","access","accessStatus","doors","rearRight","openState"],
+                "rearLeftDoor":["domains","access","accessStatus","doors","rearLeft","openState"],
+                "frontRightDoor":["domains","access","accessStatus","doors","frontRight","openState"],
+                "frontLeftDoor":["domains","access","accessStatus","doors","frontLeft","openState"],
+                "rearRightWindow":["domains","access","accessStatus","windows","rearRight","openState"],
+                "rearLeftWindow":["domains","access","accessStatus","windows","rearLeft","openState"],
+                "frontRightWindow":["domains","access","accessStatus","windows","frontRight","openState"],
+                "frontLeftWindow":["domains","access","accessStatus","windows","frontLeft","openState"],
+                "overallStatus": ["domains","access","accessStatus","overallStatus"],
+                "rightLight": ["lights","right","light_state","val"],
+                "leftLight": ["lights","left","light_state","val"],
+                "remainingKm": ["drives","total_range","val"],
+                "remainingSoC": ["drives","{type:electric}","level","val"],
+                "remainingChargingTime": ["charging","estimated_date_reached","val"],
+                "chargingState": ["charging","state","val"],
+                "chargePower": ["charging","power","val"],
+                "targetSoC": ["charging","settings","target_level","val"],
+                "kmph": ["charging","rate","val"],
+                "odometer": ["odometer", "val"],
+                "electricRange": ["drives", "{type:electric}", "range", "val"],
+                "gasolineRange": ["drives", "{type:gasoline}", "range", "val"],
+                "climatisation": ["climatization","state","val"],
+                "temperature": ["climatization","settings","target_temperature","val"],
+                "model": ["model","val"]
+                }
+      output = {}
+      for key in fields.keys():
+        value = vehicle
+        for field in fields.get(key):
+          try:
+            if "{" in field:
+              temp_key, val = field[1:-1].split(":")
+              for i in value.values():
+                  if temp_key in i:
+                    if i[temp_key]["val"] == val:
+                        value = i
+                        break
+            else:
+              value = value[field]
+          except:
+            value = "UNKNOWN"
+            break
+        if type(value) == float and (key != "temperature" and key != "chargePower" and key != "kmph"):
+            value = int(value)
+        output[key] = value
+
+
+      output["timestamp"] = f'{timestamp} - ({datetime.now().strftime("%H:%M")})'
+      if output.get("remainingChargingTime"):
+        if output.get("chargingState") == "off":
+            output["remainingChargingTime"] = "00:00"
+        else:
+            now = datetime.now(timezone.utc)
+            delta = datetime.fromisoformat(output.get("remainingChargingTime")) - now
+            total_minutes = int(delta.total_seconds() // 60)
+            hours = total_minutes // 60
+            minutes = total_minutes % 60
+            output["remainingChargingTime"] = f"{hours:02}:{minutes:02}"
+      output["odometer"] = f'{output.get("odometer",0):,}'.replace(",", ".")
+      output["latitude"] = latitude
+      output["longitude"] = longitude
+      output["position"] = position
+      if output.get("odometer", "UNKNOWN") != "UNKNOWN":
+        output["odometer_miles"] = f'{int(float(output.get("odometer", "0").replace(".","")) * 0.6214):,}'.replace(",",".")
+      else:
+        output["odometer_miles"] = output.get("odometer", "UNKNOWN")
+      if type(output.get("kmph", "UNKNNOWN")) == int:
+        output["miph"] = int(float(output.get("kmph", 0)) * 0.6214)
+      else:
+        output["miph"] = output.get("kmph", "UNKNNOWN")
+      if type(output.get("electricRange", "UNKNNOWN")) == int:
+        output["electricRange_miles"] = int(float(output.get("electricRange", 0)) * 0.6214)
+      else:
+        output["electricRange_miles"] = output.get("electricRange", "UNKNOWN")
+      if type(output.get("gasolineRange", "UNKNNOWN")) == int:
+        output["gasolineRange_miles"] = int(float(output.get("gasolineRange", 0)) * 0.6214)
+      else:
+        output["gasolineRange_miles"] = output.get("gasolineRange", "UNKNOWN")
+      if type(output.get("remainingKm", "UNKNNOWN")) == int:
+        output["remainingMiles"] = int(float(output.get("remainingKm", 0)) * 0.6214)
+      else:
+        output["remainingMiles"] = output.get("remainingKm", "UNKNOWN")
+      output["status"] = 1
+      output["error"] = ""
+      print(output)
+      exit()
 
 except Exception as e:
     output = {

@@ -1,11 +1,18 @@
 
-
+function imageExists(url, callback) {
+  const img = new Image();
+  img.onload  = () => callback(true);
+  img.onerror = () => callback(false);
+  img.src     = url;
+}
 
 Module.register("MMM-weconnectid", {
   	// Default module config.
   	defaults: {
     	username: "test@test.com",
     	password: "password",
+    	connector: "volkswagen",
+    	brand: "cupra",
     	vin: "WV00000000000000",
     	fields: '{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph","POSITION":"position"}',
     	fields_charging : ["LOADING TIME","TARGET SOC","LOADING POWER","KMPH"],
@@ -77,32 +84,40 @@ Module.register("MMM-weconnectid", {
   	// Override dom generator.
   	getDom: function () {
     	var wrapper = document.createElement("table");
-    	wrapper.style.maxWidth = this.config.maxWidth;
+    	wrapper.style.width = this.config.maxWidth;
     	var tr = document.createElement("tr");
     	wrapper.appendChild(tr);
-    	var td = document.createElement("td");
-    	td.style.Width = this.config.maxWidth;
-		td.style.Height = this.config.maxHeight;
-		td.style.position = "relative"
-    	tr.appendChild(td);
+    	var td_image = document.createElement("td");
+    	td_image.style.Width = this.config.maxWidth;
+		td_image.style.Height = this.config.maxHeight;
+		td_image.style.position = "relative"
+    	tr.appendChild(td_image);
 
 		if (this.Vehicle.status == 1 || (this.Vehicle.status == 0 && this.Vehicle.odometer != 0)) {
     		var img = document.createElement("img");
-			img.src = 'modules/MMM-weconnectid/Pictures/' + this.identifier + '/car.png';
+			img.src = 'modules/MMM-weconnectid/Pictures/' + this.identifier + '/car_picture.png';
 			img.style.maxWidth = "50%";
 			img.style.maxHeight = this.config.maxHeight;
 			img.id = "picture0";
-			td.appendChild(img);
-			var img = document.createElement("img");
-			img.src = 'modules/MMM-weconnectid/Pictures/' + this.identifier +'/status.png';
-			img.style.maxWidth = "50%";
-			img.style.maxHeight = this.config.maxHeight;
-			img.id = "picture0";
-			td.appendChild(img);
+			td_image.appendChild(img);
+			imageExists(`modules/MMM-weconnectid/Pictures/${this.identifier}/status_picture.png`, (exists) => {
+				if (exists) {
+					var img = document.createElement("img");
+					img.src = 'modules/MMM-weconnectid/Pictures/' + this.identifier +'/status_picture.png';
+					img.style.maxWidth = "50%";
+					img.style.maxHeight = this.config.maxHeight;
+					img.id = "picture0";
+					td_image.appendChild(img);
+				} else {
+					td_image.style.textAlign = "center";
+				};
+			});
 
 			var text = document.createElement("p");
 			if (this.Vehicle.overallStatus === "safe"){
     			text.innerHTML = '<i class="fa-solid fa-lock" style="color:#84dd63">'
+    		} else if (this.Vehicle.overallStatus === "UNKNOWN") {
+    			text.innerHTML = ''
     		} else {
     			text.innerHTML = '<i class="fa-solid fa-lock-open" style="color:#ee6352">'
     		}
@@ -110,7 +125,7 @@ Module.register("MMM-weconnectid", {
     			text.innerHTML = text.innerHTML + ' <i class="fa-solid fa-bolt" style="color:#84dd63">'
     		}
     		text.id = "lock"
-    		td.append(text)
+    		td_image.append(text)
 
 			var tr = document.createElement("tr");
     		wrapper.appendChild(tr);
@@ -224,7 +239,7 @@ Module.register("MMM-weconnectid", {
 					Log.log(notification);
 					payload.data = payload.data.replace(/'/g, '"');
 					const obj = JSON.parse(payload.data)
-					//  this.Vehicle = obj  // quicker 
+					//  this.Vehicle = obj  // quicker
 					if (obj["status"] === 1) {
 						/* you could do this a quicker way, less code, most already set. += on string is append ) */
 						/*
@@ -249,7 +264,7 @@ Module.register("MMM-weconnectid", {
 									tempPosition = this.config.positions[i][0]
 								}
 							}
-						// if recalculated or original is set							
+						// if recalculated or original is set
 						if (tempPosition !== "") {
 							// use it
 							this.Vehicle.position = temPosition
@@ -293,7 +308,7 @@ Module.register("MMM-weconnectid", {
 						this.Vehicle.timestamp = obj["timestamp"]
 						this.Vehicle.latitude = obj["latitude"]
 						this.Vehicle.longitude = obj["longitude"]
-						
+
 						this.Vehicle.position = ""
 						for (i = 0; i < this.config.positions.length; i++) {
 							distance = Math.acos(Math.sin((this.config.positions[i][1]) * Math.PI / 180) * Math.sin(this.Vehicle.latitude * Math.PI / 180) + Math.cos((this.config.positions[i][1]) * Math.PI / 180) * Math.cos(this.Vehicle.latitude * Math.PI / 180) * Math.cos(((this.config.positions[i][2]) * Math.PI / 180) - (this.Vehicle.longitude * Math.PI / 180))) * 6371000

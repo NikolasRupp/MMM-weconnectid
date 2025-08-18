@@ -3,7 +3,7 @@
 
 # MMM-weconnectid
 
-A module to integrale informations from [We Connect ID](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) into the [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror).
+A module to integrate information from [We Connect ID](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) into the [MagicMirror²](https://github.com/MagicMirrorOrg/MagicMirror).
 
 - [Alternative](#alternative)
 - [Usage](#usage)
@@ -11,7 +11,7 @@ A module to integrale informations from [We Connect ID](https://www.volkswagen.d
 - [Tested with](#tested-with)
 - [Pictures](#pictures)
 
-## I currently don't have a MM so notify me when something is not working. Feel free to send an merge request
+## I currently don't have a MM. Notify me when something is not working. Feel free to send a merge request
 
 ## Alternative
 
@@ -43,7 +43,7 @@ Disadvantage:
 
 - You have to register your VW ID at [MyVolkswagen](https://www.volkswagen.de/de/besitzer-und-nutzer/myvolkswagen.html) and have a valid WE Connect ID subscription
 
-- You need Python 3.9 or higher to connect to the Api. You can have a look [here](https://raspberrytips.com/install-latest-python-raspberry-pi/) on how to install it. Short it works like this:
+- You need Python 3.9 or higher to connect to the Api. You can have a look [here](https://raspberrytips.com/install-latest-python-raspberry-pi/) on how to install it. In Short, it works like this:
 
 ```shell
 cd ~
@@ -54,20 +54,35 @@ cd Python-3.9.15
 sudo make altinstall
 ```
 
-If you use this description you need to set the python Parameter in the config to 3.9 and use python3.9 -m ... to install the packages.
+If you use this description, you need to set the python Parameter in the config to 3.9 and use python3.9 -m ... to install the packages.
 
-- If not done you have to install some Packages via Pip.
+- If not done, you have to install some Packages via Pip.
 
 ```shell
 pip install Pillow
-pip install weconnect[Images]
+pip install carconnectivity
 ```
 
-If Python 3.9 is not your default Python Version your command should look something like this.
+depending on your vehicle, you need to install
+```shell
+pip install carconnectivity-connector-volkswagen
+pip install carconnectivity-connector-skoda
+pip install carconnectivity-connector-tronity
+pip install carconnectivity-connector-seatcupra
+```
+
+If Python 3.9 is not your default Python Version, your command should look something like this.
 
 ```shell
 python3.9 -m pip install Pillow
-python3.9 -m pip install weconnect[Images]
+python3.9 -m pip install carconnectivity
+```
+and one of the following
+```shell
+python3.9 -m pip install carconnectivity-connector-volkswagen
+python3.9 -m pip install carconnectivity-connector-skoda
+python3.9 -m pip install carconnectivity-connector-tronity
+python3.9 -m pip install carconnectivity-connector-seatcupra
 ```
 
 Have a look at the config Table to see how you set the Python version in the module.
@@ -79,7 +94,7 @@ cd ~/MagicMirror/modules
 git clone https://github.com/NikolasRupp/MMM-weconnectid
 ```
 
-- Now just add the module to your config.js file ([config entries](#configuration)).
+- Now add the module to your config.js file ([config entries](#configuration)).
 
 ### Configuration
 
@@ -92,6 +107,8 @@ The module needs the default configuration block in your config.js to work.
   config: {
     username: "",
     password: "",
+    connector: "",
+    brand: "",
     vin: "",
     fields: '{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph","POSITION":"position"}',
     fields_charging : ["LOADING TIME","TARGET SOC","LOADING POWER","KMPH"],
@@ -112,29 +129,31 @@ The module needs the default configuration block in your config.js to work.
 
 The following properties can be configured:
 
-|Option|Description|Options|Default|Required|Type|
-|---|---|---|---|---|---|
-|username|Your Login E-Mail|-|-|yes|Text|
-|password|Your Login Password|-|-|yes|Text|
-|vin|The VIN of your Vehicle|-|-|yes|Text|
-|fields|Fields that should be shown [More Information](#fields)|-|'{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph","POSITION":"position"}'|no|Text|
-|fields_charging|Fields that should be shown during charging [More Information](#fields)|-|["LOADING TIME","TARGET SOC","LOADING POWER","KMPH"]|no|List|
-|number|Number of fields in each row|Any Number|4|no|Number|
-|python|Python u want to use|Any Python higher than 3.9|"python3"|no|Text|
-|maxHeight|Max Height of the Pictures|Any px or % value|"300px"|no|Text|
-|maxWidth|Max Width of the Pictures|Any px or % value|"800px"|no|Text|
-|remainingSOCyellow|Percentage when the Progress Bar of the Battery should be yellow|0-100|70|no|Number|
-|remainingSOCred|Percentage when the Progress Bar of the Battery should be red|0-100|20|no|Number|
-|barstyle|Style of the Progress Bar|"fluent", "strict"|"fluent"|no|Text|
-|updateFrequency|Update Frequency|Any Value|600000|no|Number|
-|timestamp|If the Timestamp should be shown. It shows the Date and time when the last update from the car was sent to the VW Server and the Time of the last Update of the Widget|true, false|true|no|Boolean|
-|googleAPI|Googel Maps API Key if you want to convert the Position of the Vehicle to an Adress [More Information](#google-api)|-|-|no|Text|
-|positions|Custom Names for the Parking Position of the Car [More Information](#positions)|-|-|no|List|
+| Option             | Description                                                                                                                                                            | Options                                       | Default                                                                                                                                                                                                                        | Required                         | Type    |
+|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------|---------|
+| username           | Your Login E-Mail                                                                                                                                                      | -                                             | -                                                                                                                                                                                                                              | yes                              | Text    |
+| password           | Your Login Password                                                                                                                                                    | -                                             | -                                                                                                                                                                                                                              | yes                              | Text    |
+| connector          | Connector Type                                                                                                                                                         | "volkswagen", "skoda", "tronity", "seatcupra" | "volkswagen"                                                                                                                                                                                                                   | yes                              | Text    |
+| brand              | Only when connector "seatcupra" is used                                                                                                                                | "seat", "cupra"                               | "cupra"                                                                                                                                                                                                                        | yes when connector = "seatcupra" | Text    |
+| vin                | The VIN of your Vehicle                                                                                                                                                | -                                             | -                                                                                                                                                                                                                              | yes                              | Text    |
+| fields             | Fields that should be shown [More Information](#fields)                                                                                                                | -                                             | '{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph","POSITION":"position"}' | no                               | Text    |
+| fields_charging    | Fields that should be shown during charging [More Information](#fields)                                                                                                | -                                             | ["LOADING TIME","TARGET SOC","LOADING POWER","KMPH"]                                                                                                                                                                           | no                               | List    |
+| number             | Number of fields in each row                                                                                                                                           | Any Number                                    | 4                                                                                                                                                                                                                              | no                               | Number  |
+| python             | Python u want to use                                                                                                                                                   | Any Python higher than 3.9                    | "python3"                                                                                                                                                                                                                      | no                               | Text    |
+| maxHeight          | Max Height of the Pictures                                                                                                                                             | Any px or % value                             | "300px"                                                                                                                                                                                                                        | no                               | Text    |
+| maxWidth           | Max Width of the Pictures                                                                                                                                              | Any px or % value                             | "800px"                                                                                                                                                                                                                        | no                               | Text    |
+| remainingSOCyellow | Percentage when the Progress Bar of the Battery should be yellow                                                                                                       | 0-100                                         | 70                                                                                                                                                                                                                             | no                               | Number  |
+| remainingSOCred    | Percentage when the Progress Bar of the Battery should be red                                                                                                          | 0-100                                         | 20                                                                                                                                                                                                                             | no                               | Number  |
+| barstyle           | Style of the Progress Bar                                                                                                                                              | "fluent", "strict"                            | "fluent"                                                                                                                                                                                                                       | no                               | Text    |
+| updateFrequency    | Update Frequency                                                                                                                                                       | Any Value                                     | 600000                                                                                                                                                                                                                         | no                               | Number  |
+| timestamp          | If the Timestamp should be shown. It shows the Date and time when the last update from the car was sent to the VW Server and the Time of the last Update of the Widget | true, false                                   | true                                                                                                                                                                                                                           | no                               | Boolean |
+| googleAPI          | Googel Maps API Key if you want to convert the Position of the Vehicle to an Adress [More Information](#google-api)                                                    | -                                             | -                                                                                                                                                                                                                              | no                               | Text    |
+| positions          | Custom Names for the Parking Position of the Car [More Information](#positions)                                                                                        | -                                             | -                                                                                                                                                                                                                              | no                               | List    |
 
 #### Fields
 
-You can define which fields you want to see. The Format hast to be valid Json.
-The key will be used as the Header in the Table. You can Name that whatever you like. If you name them like in the default they will be translated vie the translation file.
+You can define which fields you want to see. The Format has to be valid JSON.
+The key will be used as the Header in the Table. You can Name that whatever you like. If you name them like in the default, they will be translated vie the translation file.
 
 The following Attributes are available:
 
@@ -163,7 +182,7 @@ The following Attributes are available:
 | gasolineRange_miles | Range of the vehicle in gasoline mode in miles (for PHEV and non-electic vehicles)          |
 | targetSoC           | Target SoC in %                                                                             |
 | chargekmph          | Charging ... km/h                                                                           |
-| chargemiph           | Charging ... mi/h                                                                           |
+| chargemiph          | Charging ... mi/h                                                                           |
 | leftLight           | Status of left Light                                                                        |
 | rightLight          | Status of Right Light                                                                       |
 | odometer            | Odometer in km                                                                              |
@@ -173,15 +192,15 @@ The following Attributes are available:
 | longitude           | Longitude of the Car if parked                                                              |
 | position            | Position of the Car if parked                                                               |
 
-If you want, that some Values like the remaining charging time will only be displayed during charging you can add the header to the list of the fields_charging Parameter.
+If you want that some Values like the remaining charging time will only be displayed during charging, you can add the header to the list of the fields_charging Parameter.
 
 #### Google Api
 
 You can get your Google API Key [here](https://developers.google.com/maps/documentation/javascript/get-api-key?hl=de)
 
-Unfortunately you need a Credit Card, even though you don't have to pay anything.
+Unfortunately, you need a Credit Card, even though you don't have to pay anything.
 
-If you have logged in you can create an Project and call it whatever you like. In that Project you have to activate the Geocoding API and copy the API Key in the config file.
+If you have logged in, you can create a Project and call it whatever you like. In that Project, you have to activate the Geocoding API and copy the API Key in the config file.
 
 You get 10.000 free API requests, which are one request per 5 Minutes, which should be enough. You can read more about it [here](https://mapsplatform.google.com/intl/de/pricing/).
 
@@ -189,18 +208,18 @@ If you don't enter an API key the Location, if not defined in [Positions](#posit
 
 #### Positions
 
-Note: This also works without Google API Key.
+Note: This also works without Google-API Key.
 
-You can define Positions where your car is parked often. You can Enter as many locations as you want. To get the Latitude and Longitude you can use any website like [gps-coordinates.net](https://www.gps-coordinates.net/).
+You can define Positions where your car is parked often. You can Enter as many locations as you want. To get the Latitude and Longitude, you can use any website like [gps-coordinates.net](https://www.gps-coordinates.net/).
 
 Each Position has to have the following Parameter:
 
-|Paramter| Description                                  |Type|
-|---|----------------------------------------------|---|
-|Name| Name of the description that should be shown |Text|
-|Latitude| Latitude of the Postion                      |Number|
-|Longitude| Longitude of the Position                    |Number|
-|Radius| Radius around the Coordinates in meter       |Number|
+| Paramter  | Description                                  | Type   |
+|-----------|----------------------------------------------|--------|
+| Name      | Name of the description that should be shown | Text   |
+| Latitude  | Latitude of the Postion                      | Number |
+| Longitude | Longitude of the Position                    | Number |
+| Radius    | Radius around the Coordinates in meter       | Number |
 
 An Example would be
 
@@ -210,7 +229,7 @@ An Example would be
 
 ## Credits
 
-This module uses [tillsteinbach/WeConnect-python](https://github.com/tillsteinbach/WeConnect-python) to connect to the API. Many thanks for that.
+This module uses [tillsteinbach/CarConnectivity](https://github.com/tillsteinbach/CarConnectivity) to connect to the API. Many thanks for that.
 
 ## Tested with
 
