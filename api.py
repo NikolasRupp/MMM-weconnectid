@@ -52,7 +52,8 @@ try:
                 "type": argv[5],
                 "config": {
                     "username": argv[1],
-                    "password": argv[2]
+                    "password": argv[2],
+                    "force_enable_access": False if argv[7] == "false" else True
                 }
             }
         ]
@@ -100,8 +101,8 @@ try:
       if "position" in vehicle:
         latitude = vehicle['position']['latitude']["val"]
         longitude = vehicle['position']['longitude']["val"]
-        if len(argv) == 8:
-          r = requests.get(f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={argv[7]}")
+        if len(argv) == 9:
+          r = requests.get(f"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={argv[8]}")
           if r.status_code not in range(200, 299):
             position = "UNKNOWN"
           else:
@@ -125,17 +126,17 @@ try:
         latitude = 0
         longitude = 0
         position = "DRIVING"
-      fields = {"bonnetDoor":["domains","access","accessStatus","doors","bonnet","openState"],
-                "trunkDoor":["domains","access","accessStatus","doors","trunk","openState"],
-                "rearRightDoor":["domains","access","accessStatus","doors","rearRight","openState"],
-                "rearLeftDoor":["domains","access","accessStatus","doors","rearLeft","openState"],
-                "frontRightDoor":["domains","access","accessStatus","doors","frontRight","openState"],
-                "frontLeftDoor":["domains","access","accessStatus","doors","frontLeft","openState"],
-                "rearRightWindow":["domains","access","accessStatus","windows","rearRight","openState"],
-                "rearLeftWindow":["domains","access","accessStatus","windows","rearLeft","openState"],
-                "frontRightWindow":["domains","access","accessStatus","windows","frontRight","openState"],
-                "frontLeftWindow":["domains","access","accessStatus","windows","frontLeft","openState"],
-                "overallStatus": ["domains","access","accessStatus","overallStatus"],
+      fields = {"bonnetDoor":["doors","bonnet","open_state","val"],
+                "trunkDoor":["doors","trunk","open_state","val"],
+                "rearRightDoor":["doors","rearRight","open_state","val"],
+                "rearLeftDoor":["doors","rearLeft","open_state","val"],
+                "frontRightDoor":["doors","frontRight","open_state","val"],
+                "frontLeftDoor":["doors","frontLeft","open_state","val"],
+                "rearRightWindow":["windows","rearRight","open_state","val"],
+                "rearLeftWindow":["windows","rearLeft","open_state","val"],
+                "frontRightWindow":["windows","frontRight","open_state","val"],
+                "frontLeftWindow":["windows","frontLeft","open_state","val"],
+                "overallStatus": ["doors", "lock_state","val"],
                 "rightLight": ["lights","right","light_state","val"],
                 "leftLight": ["lights","left","light_state","val"],
                 "remainingKm": ["drives","total_range","val"],

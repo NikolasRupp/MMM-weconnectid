@@ -38,9 +38,9 @@ module.exports = NodeHelper.create({
     		if (py_version_main >= 3 && py_version_second >= 9){
     			let handler
 	    		if (payload.config.googleAPI === ""){
-					handler = spawn(payload.config.python, ["-u",__dirname+path.sep+"api.py",payload.config.username,payload.config.password,payload.config.vin,pic_folder,payload.config.connector,payload.config.brand]);
+					handler = spawn(payload.config.python, ["-u",__dirname+path.sep+"api.py",payload.config.username,payload.config.password,payload.config.vin,pic_folder,payload.config.connector,payload.config.brand,payload.config.force_enable_access]);
 				} else {
-					handler = spawn(payload.config.python, ["-u",__dirname+path.sep+"api.py",payload.config.username,payload.config.password,payload.config.vin,pic_folder,payload.config.connector,payload.config.brand,payload.config.googleAPI]);
+					handler = spawn(payload.config.python, ["-u",__dirname+path.sep+"api.py",payload.config.username,payload.config.password,payload.config.vin,pic_folder,payload.config.connector,payload.config.brand,payload.config.force_enable_access,payload.config.googleAPI]);
 				}
 				handler.stdout.on('data', (data) => {
 					console.log("Got data from " + payload.config.connector + " for VIN " + payload.config.vin)

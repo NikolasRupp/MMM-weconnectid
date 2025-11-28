@@ -13,6 +13,7 @@ Module.register("MMM-weconnectid", {
     	password: "password",
     	connector: "volkswagen",
     	brand: "cupra",
+    	force_enable_access: false
     	vin: "WV00000000000000",
     	fields: '{"SOC":"remainingSoC","RANGE":"remainingKm","CLIMATE":"climatisation","ODOMETER":"odometer","LOADING TIME":"remainingTime","TARGET SOC":"targetSoC","LOADING POWER":"chargePower","KMPH":"chargekmph","POSITION":"position"}',
     	fields_charging : ["LOADING TIME","TARGET SOC","LOADING POWER","KMPH"],
@@ -35,7 +36,7 @@ Module.register("MMM-weconnectid", {
 		frontRightDoor: "closed",
 		rearRightDoor: "closed",
 		rearLeftDoor: "closed",
-		overallStatus: "safe",
+		overallStatus: "locked",
 		frontLeftWindow: "closed",
 		frontRightWindow: "closed",
 		rearRightWindow: "closed",
@@ -114,7 +115,7 @@ Module.register("MMM-weconnectid", {
 			});
 
 			var text = document.createElement("p");
-			if (this.Vehicle.overallStatus === "safe"){
+			if (this.Vehicle.overallStatus === "locked"){
     			text.innerHTML = '<i class="fa-solid fa-lock" style="color:#84dd63">'
     		} else if (this.Vehicle.overallStatus === "UNKNOWN") {
     			text.innerHTML = ''
